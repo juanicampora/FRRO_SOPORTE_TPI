@@ -1,0 +1,61 @@
+{% include 'header.html' %}
+<br>
+<br>
+<br>
+<div class="caja container">
+    <div>
+      <label id="textoDeAlta">FORMULARIO DE BAJA</label>
+      </div>
+    <form>
+      <div class="form-group">
+        <label for="patente"></label>
+        <input type="text" class="form-control" id="patente" placeholder="Ingrese Patente">
+      </div>
+    <br> 
+      
+      <button type="submit" class="btn btn-success boton"><a>Aceptar</a></button>
+      <button type="submit" class="btn btn-danger boton"><a>Cancelar</a></button>
+      <br>
+      <br>
+    </form>
+    </div>
+
+
+<style>
+.caja {
+  width:500px;
+  box-shadow: 5px 1px 20px 1px #888888;
+  background:	#F5F5F5;
+  padding-bottom:20px;
+ }
+
+.aviso {
+  font-size:20px;
+  text-align: center;
+}
+
+#textoDeAlta {
+  margin: 20px;
+  margin-left:0px;
+  font-size:18px;
+  color:grey;
+  
+}
+
+.boton {
+  float:right;
+  margin:5px; 
+}
+.gender {
+  margin-right:10px;
+  color:grey;
+  padding:2px;
+}
+
+.sexo {
+  color:grey;
+  
+}
+</style>
+
+{% include 'footer.html' %}

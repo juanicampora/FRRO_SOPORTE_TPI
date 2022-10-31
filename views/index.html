@@ -1,57 +1,17 @@
-<!doctype html>
-<html lang="en">
+{% include 'header.html' %}
+<br>
+<br>
+<br>
+<br>
+    <div class="d-grid gap-2 col-4 mx-auto">
+      <a href="/alta"><button class="btn btn-primary" type="button">COMENZAR ESTACIONAMIENTOS</button></a>
+      <br>
+      <br>
+      <a href="/baja"><button class="btn btn-primary" type="button">FINALIZAR ESTACIONAMIENTOS</button></a>
+      <br>
+      <br>
+      <a href="/listado"><button class="btn btn-primary" type="button">MOSTRAR ESTACIONAMIENTOS</button></a>
+  </div>
 
-<head>
-  <title>Estacionamiento</title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS v5.2.1 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-
-</head>
-
-<body>
-    <div class="table-content">
-        <table class="table table-borded table-responsive table-striped " id="table-list">
-            <thead class="table-dark">
-                <tr>
-                    <td>Nombre</td>
-                    <td>Apelldio</td>
-                    <td>Email</td>
-                    <td>Dia</td>
-                    <td>Auto</td>
-                    <td>Patente</td>
-                    <td>HoraEntrada</td>
-                    <td>HoraSalida</td>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td>Valentino</td>
-                    <td>Casesi</td>
-                    <td>valecasesi@gmail.com</td>
-                    <td>29/10/22</td>
-                    <td>BMW</td>
-                    <td>SWQ752</td>
-                    <td>10:30</td>
-                    <td>12:30</td>
-                </tr>
-                
-            </tbody>
-        </table>
-        <a class="btn btn-success btn-lg" href="/add" role="button">Agregar Estacionamiento</a>
-    </div>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-  </script>
-</body>
-
-</html>
+{% include 'footer.html' %}

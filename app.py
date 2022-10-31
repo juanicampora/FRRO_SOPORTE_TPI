@@ -15,5 +15,17 @@ def inicio():
 def add():
     return render_template('add.html')
 
+@app.route('/alta')
+def alta():
+    return render_template('alta.html')
+
+@app.route('/baja')
+def baja():
+    return render_template('baja.html')
+
+@app.route('/listado')
+def listar():
+    return render_template('listado.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
