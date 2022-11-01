@@ -1,7 +1,7 @@
 from flask import Flask,render_template, request, redirect, session,send_from_directory
 from datetime import datetime
 
-app=Flask(__name__, template_folder='./views')
+app=Flask(__name__, template_folder='./views', static_folder='./views/static')
 
 @app.route('/')
 def login():
