@@ -12,23 +12,16 @@
 
     <div class="login-page">
         <div class="form">
-
-          <form class="register-form">
-            <input type="text" placeholder="nombre"/>
-            <input type="password" placeholder="contraseña"/>
-            <input type="text" placeholder="email"/>
-            <button><a href="#">Crear Cuenta</a></button>
-            <p class="message">Estas registrado? </p>
-          </form>
-
-          <form class="login-form">
-            <input type="text" placeholder="Nombre"/>
-            <input type="password" placeholder="Contraseña"/>
-            <button><a href="/inicio">Ingresar</a></button>
-            <p class="message">No estas registrado? <a href="#">Crear Cuenta</a></p>
-          </form>
-
+            <form action="/login" method="post" class="login-form">
+              <label for="txtUsuario" class="form-label">Usuario:</label>
+              <input type="text" name="txtUsuario" id="txtUsuario" placeholder="Nombre"/>
+              <label for="txtPassword" class="form-label">Contraseña:</label>
+              <input type="password" name="txtPassword" id="txtPassword" placeholder="Contraseña"/>
+              <button type="submit" class="btn btn-success">Ingresar</button>
+              <p class="message">No estas registrado? <a href="#">Crear Cuenta</a></p>
+            </form>
         </div>
       </div>
+
 </body>
 </html>
