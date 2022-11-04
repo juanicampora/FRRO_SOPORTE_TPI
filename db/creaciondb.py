@@ -1,5 +1,5 @@
 """Creacion e Inicializacion de las Tablas de la Base de Datos SQL"""
-
+## ESTE APARTADO QUEDO OBSOLETO POR LA ELECCION DE UTILIZAR UN ORM
 from random import randint
 import sqlite3
 
@@ -50,7 +50,7 @@ def crear_tablas():
     cursor.execute('''CREATE TABLE IF NOT EXISTS estadia (
                     patente TEXT,
                     fechaHoraIngreso TEXT,
-                    fecha_nacimiento TEXT,
+                    fechaHoraEgreso  TEXT,
                     nroParking INTEGER NOT NULL,
                     FOREIGN KEY (patente) REFERENCES cliente(patente),
                     FOREIGN KEY (nroParking) REFERENCES parking(nroParking)

@@ -1,13 +1,26 @@
 import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import db.models
 
-conn=sqlite3.connect('db/basedatos.db')
-cursor=conn.cursor()
+from sqlalchemy.ext.declarative import declarative_base
 
-######################################################## SELECTS ######################################################
+cantidad_parkings=25
 
-######################################################## INSERTS ######################################################
+engine=create_engine('sqlite:///db/basedatossss.sqlite')
+Session= sessionmaker(bind=engine)
+session= Session()
+funcdb.Base.metadata.create_all(funcdb.engine)
+    # db.inicializar_tablas()
 
-######################################################## UPDATES ######################################################
+Base = declarative_base()
 
-conn.commit()
-conn.close()
+
+
+# def inicializar_tablas():
+    # for i in range(cantidad_parkings):
+        # pisoaleatorio=randint(1,3)
+        # cursor.execute('''INSERT INTO parking (piso,ocupado)
+                            # VALUES(?,?)''', (pisoaleatorio,0))
+
+
