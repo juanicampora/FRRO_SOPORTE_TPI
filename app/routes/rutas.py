@@ -1,32 +1,33 @@
-from flask import Flask,render_template, request, redirect, session,send_from_directory
+from flask import Blueprint,render_template, request, redirect, session,send_from_directory
+from app.configuracion import Config
 
-app=Flask(__name__, template_folder='../views/templates', static_folder='../views/static')
+global_rutas=Blueprint("rutasglobales",__name__,template_folder=Config.CARPETA_TEMPLATES,static_folder=Config.CARPETA_STATIC)
 
-@app.route('/')
+@global_rutas.route('/')
 def login():
     return render_template('login.html')
 
-@app.route('/inicio')
+@global_rutas.route('/inicio')
 def inicio():
     return render_template('index.html')
 
-@app.route('/add')
+@global_rutas.route('/add')
 def add():
     return render_template('add.html')
 
-@app.route('/alta')
+@global_rutas.route('/alta')
 def alta():
     return render_template('alta.html')
 
-@app.route('/baja')
+@global_rutas.route('/baja')
 def baja():
     return render_template('baja.html')
 
-@app.route('/listado')
+@global_rutas.route('/listado')
 def listar():
     return render_template('listado.html')
 
-@app.route('/login', methods=['POST'])
+@global_rutas.route('/login', methods=['POST'])
 def admin_login_post():
     _usuario= request.form['txtUsuario']
     _password= request.form['txtPassword']

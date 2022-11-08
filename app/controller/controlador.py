@@ -1,3 +1,6 @@
-from db.basedatos import bbdd
+from app.db.basedatos import bbdd
 
-base=bbdd()
+
+
+def abrir():
+    base=bbdd()
