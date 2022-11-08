@@ -56,7 +56,7 @@ class Trabajador(Base):
 
 class Parking(Base):
     __tablename__ = 'parking'
-    nroParking    = Column(Integer, primary_key=True, autoincrement=True)
+    nroParking    = Column(Integer, primary_key=True)
     piso          = Column(Integer, nullable=False)
     ocupado       = Column(Boolean, nullable=False, default=False)
 
