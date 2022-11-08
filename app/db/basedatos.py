@@ -1,19 +1,21 @@
 import sqlite3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import db.models
+from db.models import Base,Precio,Descuento,Cliente,Trabajador,Parking,Estadia
 
 from sqlalchemy.ext.declarative import declarative_base
 
-cantidad_parkings=25
+class bbdd():
+    def __init__(self):
+        cantidad_parkings=25
 
-engine=create_engine('sqlite:///db/basedatossss.sqlite')
-Session= sessionmaker(bind=engine)
-session= Session()
-funcdb.Base.metadata.create_all(funcdb.engine)
+        engine=create_engine('sqlite:///db/basedatossss.sqlite')
+        Base.metadata.create_all(engine)
+        Session= sessionmaker(bind=engine)
+        session= Session()
+    
     # db.inicializar_tablas()
 
-Base = declarative_base()
 
 
 

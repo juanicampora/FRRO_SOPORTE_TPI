@@ -1,7 +1,6 @@
-from app import app
-from flask import render_template, request, redirect, session,send_from_directory
-from datetime import datetime
+from flask import Flask,render_template, request, redirect, session,send_from_directory
 
+app=Flask(__name__, template_folder='../views/templates', static_folder='../views/static')
 
 @app.route('/')
 def login():
@@ -34,8 +33,8 @@ def admin_login_post():
     print(_usuario)
     print(_password)
     if _usuario=="admin" and _password=="123":
-        session["login"]=True
-        session["usuario"]="Administrador"
-        return redirect("index.html")
+        return render_template("index.html")
 
     return render_template("login.html")
+
+
