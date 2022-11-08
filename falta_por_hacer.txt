@@ -1,2 +1,3 @@
 Aca la idea es que anotemos lo que nos vamos acordando que nos falta asi no quedan cosas sin hacer
 -alta usuario y contraseña
+- que el login no sea hardcodeado
