@@ -34,14 +34,14 @@ class Descuento(Base):
 
 class Cliente(Base):
     __tablename__ = 'cliente'
-    patente       = Column(Integer, primary_key=True)
-    celular       = Column(Integer)
-    idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento'))
+    patente       = Column(String, primary_key=True)
+    celular       = Column(Integer, nullable=True)
+    idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento') ,nullable=True)
 
-    def __init__(self, patente, celular, idDescuento):
+    def __init__(self, patente, celular):
         self.patente=patente
         self.celular=celular
-        self.idDescuento=idDescuento
+        
 
 class Trabajador(Base):
     __tablename__ = 'trabajador'

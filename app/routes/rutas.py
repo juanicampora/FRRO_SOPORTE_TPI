@@ -1,7 +1,10 @@
-from flask import Blueprint,render_template, request, redirect, session,send_from_directory
+from flask import Blueprint,render_template, request, redirect, session,send_from_directory,url_for
 from app.configuracion import Config
+from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
+from app.controller.controlador import Controlador
 
 global_rutas=Blueprint("rutasglobales",__name__,template_folder=Config.CARPETA_TEMPLATES,static_folder=Config.CARPETA_STATIC)
+controlador=Controlador()
 
 @global_rutas.route('/')
 def login():
@@ -14,6 +17,14 @@ def inicio():
 @global_rutas.route('/add')
 def add():
     return render_template('add.html')
+
+@global_rutas.route('/altaenv', methods=['post'])
+def altacontacto():
+    nuevapatente=str(request.form.get('patente'))
+    nuevocelular=int(request.form.get('celular'))
+    nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular)
+    controlador.altaCliente(nuevocliente)
+    return redirect(url_for('rutasglobales.inicio'))
 
 @global_rutas.route('/alta')
 def alta():
@@ -37,5 +48,4 @@ def admin_login_post():
         return render_template("index.html")
 
     return render_template("login.html")
-
 
