@@ -22,17 +22,21 @@ class bbdd():
             self.session.add(nuevo_parking)
             self.session.commit()
 
-    def dev_descuento(self,idBuscado):
+    def dev_cliente(self,patenteCliente)-> Cliente:
+        query=self.session.execute( select(Cliente).where(Cliente.patente==patenteCliente) )
+        return query.fetchone()
+
+    def dev_descuento(self,idBuscado)-> Descuento:
         query=self.session.execute( select(Descuento).where(Descuento.idDescuento==idBuscado) )
         return query.fetchone()
 
-    def alta_cliente(self,nuevoCliente:Cliente):
-        self.session.add(nuevoCliente)
-        self.session.commit()
-
-    def dev_cliente(self,patenteCliente):
-        query=self.session.execute( select(Cliente).where(Cliente.patente==patenteCliente) )
-        return query.fetchone()
+    def alta_cliente(self,nuevoCliente:Cliente) -> bool:
+        if self.dev_cliente(nuevoCliente.patente):
+            return False
+        else:
+            self.session.add(nuevoCliente)
+            self.session.commit()
+            return True
         
     def __init__(self):
         self.cantidad_parkings=30

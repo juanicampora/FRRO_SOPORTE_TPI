@@ -8,7 +8,7 @@ controlador=Controlador()
 
 @global_rutas.route('/')
 def login():
-    return render_template('login.html')
+    return render_template('login2.html')
 
 @global_rutas.route('/inicio')
 def inicio():
@@ -46,6 +46,5 @@ def admin_login_post():
     print(_password)
     if _usuario=="admin" and _password=="123":
         return render_template("index.html")
-
     return render_template("login.html")
 
