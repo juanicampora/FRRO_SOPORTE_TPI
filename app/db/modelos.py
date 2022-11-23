@@ -7,12 +7,10 @@ Base = declarative_base()
 class Usuario(Base):
     __tablename__ = 'usuario'
     usuario       = Column(String, primary_key=True)
-    celular       = Column(Integer, nullable=True)
-    idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento') ,nullable=True)
-
-    def __init__(self, patente, celular):
-        self.patente=patente
-        self.celular=celular
+    password      = Column(String, nullable=False)
+    def __init__(self, usuario, password):
+        self.usuario=usuario
+        self.password=password
 
 class Precio(Base):
     __tablename__ = 'precio'
