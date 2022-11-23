@@ -70,7 +70,7 @@
   <main class="form-signin w-100 m-auto">
     <form action="/login" method="post" class="login-form mb-3">
       <img class="mb-4" src="{{ url_for('static',filename='estacionamiento.svg') }}" alt="" width="72" height="57">
-      <h1 class="h3 mb-3 fw-normal">Iniciar Sesión</h1>
+      <h1 class="h3 mb-3 fw-normal">Registro</h1>
 
       {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -81,7 +81,10 @@
           {% endfor %}
         {% endif %}
       {% endwith %}  
-      
+      <div class="form-floating">
+        <input type="text" class="form-control" name="txtUsuario" id="txtNombre" placeholder="Nombre"/>
+        <label for="txtUsuario">Nombre y Apellido</label>
+      </div>
       <div class="form-floating">
         <input type="text" class="form-control" name="txtUsuario" id="txtUsuario" placeholder="Usuario"/>
         <label for="txtUsuario">Usuario</label>
@@ -91,8 +94,8 @@
         <label for="txtPassword">Contraseña</label>
       </div>
 
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Ingresar</button>
-      <p class="mt-3 message">No estas registrado? <a href="/registro">Crear Cuenta</a></p>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Registrarme</button>
+      <p class="mt-3 message">Ya estas registrado? <a href="/login">Iniciar Sesión</a></p>
       <p class="mt-5 mb-3 text-muted">&copy; Grupo 06 2022–2023</p>
     </form>
   </main>

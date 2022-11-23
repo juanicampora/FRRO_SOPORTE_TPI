@@ -1,16 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
+from werkzeug.security import check_password_hash,generate_password_hash
+from flask_login import UserMixin
 
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
-
-class Usuario(Base):
-    __tablename__ = 'usuario'
-    usuario       = Column(String, primary_key=True)
-    password      = Column(String, nullable=False)
-    def __init__(self, usuario, password):
-        self.usuario=usuario
-        self.password=password
 
 class Precio(Base):
     __tablename__ = 'precio'
@@ -44,6 +38,7 @@ class Cliente(Base):
     __tablename__ = 'cliente'
     patente       = Column(String, primary_key=True)
     celular       = Column(Integer, nullable=True)
+    activo        = Column(Boolean, nullable=False)
     idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento') ,nullable=True)
 
     def __init__(self, patente, celular):
@@ -51,7 +46,7 @@ class Cliente(Base):
         self.celular=celular
         
 
-class Trabajador(Base):
+class Trabajador(UserMixin):
     __tablename__ = 'trabajador'
     usuario       = Column(String, primary_key=True)
     password      = Column(String, nullable=False)
@@ -59,8 +54,12 @@ class Trabajador(Base):
 
     def __init__(self, usuario, password, nombreApellido):
         self.usuario=usuario
-        self.password=password
+        self.password=generate_password_hash(password)
         self.nombreApellido=nombreApellido
+
+    @classmethod
+    def check_password(self,hashed_password,password):
+        return check_password_hash(hashed_password,password)
 
 class Parking(Base):
     __tablename__ = 'parking'

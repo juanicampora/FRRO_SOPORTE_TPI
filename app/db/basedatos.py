@@ -22,6 +22,10 @@ class bbdd():
             self.session.add(nuevo_parking)
             self.session.commit()
 
+    def dev_trabajador(self,usuarioIngresado)->Trabajador:
+        query=self.session.execute( select(Trabajador).where(Trabajador.usuario==usuarioIngresado) )
+        return query.fetchone()
+
     def dev_cliente(self,patenteCliente)-> Cliente:
         query=self.session.execute( select(Cliente).where(Cliente.patente==patenteCliente) )
         return query.fetchone()
@@ -41,7 +45,7 @@ class bbdd():
     def __init__(self):
         self.cantidad_parkings=30
 
-        engine=create_engine('sqlite:///app/db/basedatos.sqlite')
+        engine=create_engine('sqlite:///app/db/basedatos.sqlite',connect_args={'check_same_thread': False})
         Base.metadata.create_all(engine)
         Session= sessionmaker(bind=engine)
         self.session= Session()
