@@ -4,6 +4,16 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
+class Usuario(Base):
+    __tablename__ = 'usuario'
+    usuario       = Column(String, primary_key=True)
+    celular       = Column(Integer, nullable=True)
+    idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento') ,nullable=True)
+
+    def __init__(self, patente, celular):
+        self.patente=patente
+        self.celular=celular
+
 class Precio(Base):
     __tablename__ = 'precio'
     idPrecio    = Column(Integer,   primary_key=True,   autoincrement=True)
