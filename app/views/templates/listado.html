@@ -3,35 +3,29 @@
     <br>
     <br>
     <br>
-    <div class="table-content">
-        <table class="table table-borded table-responsive table-striped " id="table-list" >
-            <thead class="table-dark">
-                <tr>
-                    <td>Nombre</td>
-                    <td>Apelldio</td>
-                    <td>Email</td>
-                    <td>Dia</td>
-                    <td>Auto</td>
-                    <td>Patente</td>
-                    <td>HoraEntrada</td>
-                    <td>HoraSalida</td>
-                </tr>
-            </thead>
+    <div class="container">
+        <div class="table-content">
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Patente</td>
+                        <td>Celular</td>
+                        <td>HoraEntrada</td>
+                        <td>HoraSalida</td>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr>
-                    <td>Valentino</td>
-                    <td>Casesi</td>
-                    <td>valecasesi@gmail.com</td>
-                    <td>29/10/22</td>
-                    <td>BMW</td>
-                    <td>SWQ752</td>
-                    <td>10:30</td>
-                    <td>12:30</td>
-                </tr>
-                
-            </tbody>
-        </table>
-        <a class="btn btn-success btn-lg" href="/add" role="button">Agregar Estacionamiento</a>
+                <tbody>
+                    {% for e in estadia %}
+                        <tr>
+                            <td>{{p.patente}}</td>
+                            <td>{{p.numero}}</td>
+                            <td>{{}}</td>
+                            <td>12:30</td>
+                        </tr>
+                    {% endfor %}     
+                </tbody>
+            </table>
+        </div>
     </div>
 {% include 'footer.html' %}

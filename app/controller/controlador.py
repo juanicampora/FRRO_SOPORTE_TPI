@@ -21,9 +21,33 @@ class Controlador():
         else:
             return ('MalPass',None)
     
-
     def altaTrabajador(self,nuevoTrabajador:Trabajador)->bool:
         return self.base.alta_trabajador(nuevoTrabajador)
 
+    def verifParkingDisponible(self)->bool:
+        if self.base.nro_parking_disponible is None:
+            return False
+        else:
+            return True 
+    
     def altaCliente(self,nuevoCliente:Cliente):
-        self.base.alta_cliente(nuevoCliente)
+        nuevoCliente.patente=nuevoCliente.patente.strip()
+        viejoCliente=self.dev_cliente(nuevoCliente.patente)
+        if viejoCliente is None:
+            self.base.alta_cliente(nuevoCliente)
+            self.base.activar_estadia_cliente(nuevoCliente,nroParking)
+            return 'Alta'
+        elif viejoCliente.activo:
+            return 'Activo'    
+        elif viejoCliente.celular!=nuevoCliente.celular:
+            self.base.actualizar_celular_cliente(nuevoCliente)
+            nroParking=self.base.nro_parking_disponible()
+            self.base.activar_estadia_cliente(nuevoCliente,nroParking)
+            return 'Actualizado'
+        else:
+            nroParking=self.base.nro_parking_disponible()
+            self.base.activar_estadia_cliente(nuevoCliente,nroParking)
+            return 'Activado'
+
+    def listarEstadiasActivas(self):
+        self.base.dev_estadias_activas()

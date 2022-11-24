@@ -68,10 +68,14 @@ def logout():
 def inicio():
     return render_template('index.html')
 
-@global_rutas.route('/add')     #esto deberia reemplazarse con el /alta
+@global_rutas.route('/alta')
 @login_required
-def add():
-    return render_template('add.html')
+def alta():
+    if controlador.verifParkingDisponible():
+        return render_template('alta2.html')
+    else:
+        flash('No hay Parking Disponible')
+        return render_template('mensaje.html')
 
 @global_rutas.route('/altaenv', methods=['post'])
 @login_required
@@ -79,13 +83,24 @@ def altacontacto():
     nuevapatente=str(request.form.get('patente'))
     nuevocelular=int(request.form.get('celular'))
     nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular)
-    controlador.altaCliente(nuevocliente)
-    return redirect(url_for('rutasglobales.inicio'))
+    resultado=controlador.altaCliente(nuevocliente)
+    if resultado=='Alta':
+        flash('Alta realizada')
+        return render_template('alta2.html')
+    elif resultado=='Activo':
+        flash('El cliente previamente fue dado de Alta')
+        return render_template('alta2.html')
+    elif resultado=='Actualizado':
+        flash('El cliente previamente fue dado de Alta, se actualizó su celular')
+        return render_template('alta2.html')
+    else:
+        flash('Alta realizada a un cliente registrado anteriormente')
+        return render_template('alta2.html')
 
-@global_rutas.route('/alta')
+@global_rutas.route('/add')     #esto deberia reemplazarse con el /alta
 @login_required
-def alta():
-    return render_template('alta.html')
+def add():
+    return render_template('add.html')
 
 @global_rutas.route('/baja')
 @login_required
@@ -95,4 +110,5 @@ def baja():
 @global_rutas.route('/listado')
 @login_required
 def listar():
-    return render_template('listado.html')
+    data=controlador.listarEstadiasActivas()
+    return render_template('listado.html',data=data)
