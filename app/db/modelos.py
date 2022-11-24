@@ -58,9 +58,10 @@ class Cliente(Base):
     activo        = Column(Boolean, nullable=False)
     idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento') ,nullable=True)
 
-    def __init__(self, patente, celular):
+    def __init__(self, patente, celular, activo):
         self.patente=patente
         self.celular=celular
+        self.activo=activo
 
 class Parking(Base):
     __tablename__ = 'parking'

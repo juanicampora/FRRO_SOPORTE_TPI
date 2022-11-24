@@ -1,2 +1,4 @@
-for i in range(1,26):
-    print (i)
+from datetime import datetime
+
+
+print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))

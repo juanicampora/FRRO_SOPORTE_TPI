@@ -40,12 +40,12 @@ class bbdd():
             return True
 
     def dev_cliente(self,patenteCliente)-> Cliente:
-        query=self.session.execute( select(Cliente).where(Cliente.patente==patenteCliente) )
-        return query.fetchone()
+        query=self.session.query(Cliente).filter_by(patente=patenteCliente)
+        return query.first()
 
     def dev_descuento(self,idBuscado)-> Descuento:
-        query=self.session.execute( select(Descuento).where(Descuento.idDescuento==idBuscado) )
-        return query.fetchone()
+        query=self.session.query(Descuento).filter_by(idDescuento=idBuscado)
+        return query.first()
 
     def alta_cliente(self,nuevoCliente:Cliente) -> bool:
         self.session.add(nuevoCliente)
@@ -64,7 +64,7 @@ class bbdd():
 
     def activar_estadia_cliente(self,nuevoCliente:Cliente,nroParking:int):
         self.session.query(Cliente).filter_by(patente=nuevoCliente.patente).update({Cliente.activo:True})
-        nuevaEstadia=Estadia(nuevoCliente.patente,datetime.now(),None,nroParking)
+        nuevaEstadia=Estadia(nuevoCliente.patente,datetime.now().strftime("%d/%m/%Y %H:%M:%S"),None,nroParking)
         self.session.add(nuevaEstadia)
         self.session.commit()
     

@@ -79,13 +79,13 @@ def alta():
 
 @global_rutas.route('/altaenv', methods=['post'])
 @login_required
-def altacontacto():
+def altaestadia():
     nuevapatente=str(request.form.get('patente'))
     nuevocelular=int(request.form.get('celular'))
-    nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular)
+    nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular,activo=True)
     resultado=controlador.altaCliente(nuevocliente)
     if resultado=='Alta':
-        flash('Alta realizada')
+        flash('Alta')
         return render_template('alta2.html')
     elif resultado=='Activo':
         flash('El cliente previamente fue dado de Alta')

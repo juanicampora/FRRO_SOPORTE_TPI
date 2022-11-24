@@ -7,15 +7,32 @@
           <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
           <h1 class="fw-bold mb-0 fs-2">Alta Auto en Parking</h1>
         </div>
-  
+         
         <div class="modal-body p-5 pt-0">
-          <form class="">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                {% if message=="Alta" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Alta realizada</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>   
+                {% else %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>{{ message }}</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div> 
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          <form class="" action="/altaenv" method="post">
             <div class="form-floating mb-3">
-              <input class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+              <input class="form-control rounded-3" id="floatingInput" name="patente" placeholder="name@example.com">
               <label for="floatingInput">Patente</label>
             </div>
             <div class="form-floating mb-3">
-              <input class="form-control rounded-3" id="floatingPassword" placeholder="Password">
+              <input class="form-control rounded-3" id="floatingPassword" name="celular" placeholder="Password">
               <label for="floatingPassword">Celular</label>
             </div>
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button>

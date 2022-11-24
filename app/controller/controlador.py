@@ -30,9 +30,15 @@ class Controlador():
         else:
             return True 
     
+    def devCliente(self,patenteIngresada):
+        return self.base.dev_cliente(patenteIngresada)
+
     def altaCliente(self,nuevoCliente:Cliente):
-        nuevoCliente.patente=nuevoCliente.patente.strip()
-        viejoCliente=self.dev_cliente(nuevoCliente.patente)
+        acortarPatente=nuevoCliente.patente
+        nuevoCliente.patente=acortarPatente.replace(" ", "")
+        print(nuevoCliente.patente)
+        viejoCliente=self.devCliente(nuevoCliente.patente)
+        nroParking=self.base.nro_parking_disponible()
         if viejoCliente is None:
             self.base.alta_cliente(nuevoCliente)
             self.base.activar_estadia_cliente(nuevoCliente,nroParking)
@@ -41,11 +47,9 @@ class Controlador():
             return 'Activo'    
         elif viejoCliente.celular!=nuevoCliente.celular:
             self.base.actualizar_celular_cliente(nuevoCliente)
-            nroParking=self.base.nro_parking_disponible()
             self.base.activar_estadia_cliente(nuevoCliente,nroParking)
             return 'Actualizado'
         else:
-            nroParking=self.base.nro_parking_disponible()
             self.base.activar_estadia_cliente(nuevoCliente,nroParking)
             return 'Activado'
 
