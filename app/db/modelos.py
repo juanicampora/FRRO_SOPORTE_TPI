@@ -46,11 +46,13 @@ class Cliente(Base):
         self.celular=celular
         
 
-class Trabajador(UserMixin):
+class Trabajador(Base,UserMixin):
     __tablename__ = 'trabajador'
-    usuario       = Column(String, primary_key=True)
+    id            = Column(Integer, primary_key=True)
+    usuario       = Column(String, nullable=False)
     password      = Column(String, nullable=False)
     nombreApellido= Column(String, nullable=False)
+
 
     def __init__(self, usuario, password, nombreApellido):
         self.usuario=usuario

@@ -13,5 +13,5 @@ login_manager_app=LoginManager(app)
 from app.routes.rutas import controlador
 
 @login_manager_app.user_loader
-def load_user(usuario):
-    return controlador.devTrabajador(usuario)
+def load_user(id):
+    return controlador.devTrabajador(id)

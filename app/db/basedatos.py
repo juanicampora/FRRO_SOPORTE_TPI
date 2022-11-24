@@ -23,8 +23,20 @@ class bbdd():
             self.session.commit()
 
     def dev_trabajador(self,usuarioIngresado)->Trabajador:
-        query=self.session.execute( select(Trabajador).where(Trabajador.usuario==usuarioIngresado) )
-        return query.fetchone()
+        query=self.session.query(Trabajador).filter_by(usuario=usuarioIngresado)
+        return query.first()
+
+    def dev_trabajador_id(self,idIngresado)->Trabajador:
+        query=self.session.query(Trabajador).filter_by(id=idIngresado)
+        return query.first()
+
+    def alta_trabajador(self,nuevoTrabajador:Cliente) -> bool:
+        if self.dev_trabajador(nuevoTrabajador.usuario):
+            return False
+        else:
+            self.session.add(nuevoTrabajador)
+            self.session.commit()
+            return True
 
     def dev_cliente(self,patenteCliente)-> Cliente:
         query=self.session.execute( select(Cliente).where(Cliente.patente==patenteCliente) )
