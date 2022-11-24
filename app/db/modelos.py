@@ -6,6 +6,23 @@ from flask_login import UserMixin
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
+class Trabajador(Base,UserMixin):
+    __tablename__ = 'trabajador'
+    id            = Column(Integer, primary_key=True)
+    usuario       = Column(String, nullable=False)
+    password      = Column(String, nullable=False)
+    nombreApellido= Column(String, nullable=False)
+
+
+    def __init__(self, usuario, password, nombreApellido):
+        self.usuario=usuario
+        self.password=generate_password_hash(password)
+        self.nombreApellido=nombreApellido
+
+    @classmethod
+    def check_password(self,hashed_password,password):
+        return check_password_hash(hashed_password,password)
+
 class Precio(Base):
     __tablename__ = 'precio'
     idPrecio    = Column(Integer,   primary_key=True,   autoincrement=True)
@@ -44,24 +61,6 @@ class Cliente(Base):
     def __init__(self, patente, celular):
         self.patente=patente
         self.celular=celular
-        
-
-class Trabajador(Base,UserMixin):
-    __tablename__ = 'trabajador'
-    id            = Column(Integer, primary_key=True)
-    usuario       = Column(String, nullable=False)
-    password      = Column(String, nullable=False)
-    nombreApellido= Column(String, nullable=False)
-
-
-    def __init__(self, usuario, password, nombreApellido):
-        self.usuario=usuario
-        self.password=generate_password_hash(password)
-        self.nombreApellido=nombreApellido
-
-    @classmethod
-    def check_password(self,hashed_password,password):
-        return check_password_hash(hashed_password,password)
 
 class Parking(Base):
     __tablename__ = 'parking'
@@ -78,7 +77,7 @@ class Estadia(Base):
     __tablename__ = 'estadia'
     patente = Column(String, ForeignKey('cliente.patente'), primary_key=True)
     fechaHoraIngreso = Column(String, primary_key=True)
-    fechaHoraEgreso  = Column(String)
+    fechaHoraEgreso  = Column(String, nullable=True)
     nroParking       = Column(Integer, ForeignKey('parking.nroParking'), nullable=False)
 
     def __init__(self, patente, fechaHoraIngreso, fechaHoraEgreso, nroParking):
