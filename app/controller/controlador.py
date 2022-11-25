@@ -35,6 +35,9 @@ class Controlador():
     
     def devCliente(self,patenteIngresada):
         return self.base.dev_cliente(patenteIngresada)
+    
+    def devDescuento(self,idIngresado):
+        return self.base.dev_descuento(idIngresado)
 
     def altaCliente(self,nuevoCliente:Cliente):
         nuevoCliente.patente=nuevoCliente.patente.replace(" ", "")
@@ -68,6 +71,29 @@ class Controlador():
     def listarEstadiasClientesActivos(self):
         return self.base.dev_estadias_activas()
         
+    def listarDescuentos(self):
+        return self.base.dev_lista_descuentos()
+
+    def nuevoDescuento(self,descripcionIngresada,valorIngresado):
+        self.base.nuevo_descuento(descripcionIngresada,valorIngresado)
+
+    def bajaDescuento(self,idbaja):
+        if self.devDescuento(idbaja) is None:
+            return 'Mal'
+        elif self.devDescuento(idbaja).vigente:
+            self.base.desactivar_descuento(idbaja)
+            return 'Baja'
+        else:
+            return 'Desactivado'
+
+    def altaDescuento(self,idalta):
+        if self.devDescuento(idalta) is None:
+            return 'Mal'
+        elif self.devDescuento(idalta).vigente:
+            return 'Activo'
+        else:
+            self.base.activar_descuento(idalta)
+            return 'Alta'
 
 
         

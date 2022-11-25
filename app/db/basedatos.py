@@ -46,8 +46,7 @@ class bbdd():
         return query.first()
 
     def dev_descuento(self,idBuscado)-> Descuento:
-        query=self.session.query(Descuento).filter_by(idDescuento=idBuscado)
-        return query.first()
+        return self.session.query(Descuento).filter_by(idDescuento=idBuscado).first()   
 
     def alta_cliente(self,nuevoCliente:Cliente) -> bool:
         self.session.add(nuevoCliente)
@@ -91,6 +90,23 @@ class bbdd():
             lista[i]=[l[2].piso,l[0].nroParking,l[0].patente,l[1].celular,l[0].fechaHoraIngreso]
             i+=1        
         return lista
+
+    def dev_lista_descuentos(self):
+        return self.session.query(Descuento).all()
+
+    def nuevo_descuento(self,descripcionIngresada,valorIngresado):
+        nuevoDescuento=Descuento(idDescuento=None,descripcion=descripcionIngresada,valor=valorIngresado,vigente=None)
+        self.session.add(nuevoDescuento)
+        self.session.commit()
+
+
+    def desactivar_descuento(self,idBaja):
+        self.session.query(Descuento).filter_by(idDescuento=idBaja).update({Descuento.vigente:False})
+        self.session.commit()
+    
+    def activar_descuento(self,idAlta):
+        self.session.query(Descuento).filter_by(idDescuento=idAlta).update({Descuento.vigente:True})
+        self.session.commit()
 
     def __init__(self):
         self.cantidad_parkings=30

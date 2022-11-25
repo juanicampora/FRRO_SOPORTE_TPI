@@ -1,0 +1,95 @@
+{% include 'header.html' %}
+    <style>
+        table,
+        table td {
+        border: 1px solid #cccccc;
+        }
+        td {
+        text-align: center;
+        vertical-align: middle;
+        }
+    </style>
+    <br>
+    <br>
+    <div class="container">
+        <div class="table-content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message=="Error, complete todos los campos" %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {% else %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>   
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <h1>Nuevo Descuento</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Descripcion</td>
+                        <td>Valor</td>
+                        <td>Accion</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-secondary">
+                        <form class="" action="/descuentos" method="post">                            
+                            <td  text-align:center>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtDescripcion" name="txtDescripcion" placeholder="Password">
+                                    <label for="txtDescripcion">Descripcion</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtValor" name="txtValor" placeholder="Password">
+                                    <label for="txtValor">Valor</label>
+                                </div>
+                            </td>
+                            <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
+                        </form>                            
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Listado Descuentos</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Vigencia</td>
+                        <td>idDescuento</td>
+                        <td>Descripcion</td>
+                        <td>Valor</td>                        
+                        <td>Accion</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for d in data_descuentos %}
+                        {% if d.vigente==False %}
+                            <tr class="table-danger">
+                                <td>No Vigente</td>
+                                <td>{{d.idDescuento}}</td>                            
+                                <td>{{d.descripcion}}</td>                            
+                                <td>{{d.valor}}</td>                            
+                                <td><a href="/descuentos/alta/{{d.idDescuento}}" class="btn btn-success" role="button">Alta vigencia</a></td>                           
+                            </tr>
+                        {% else %}
+                            <tr class="table-success">
+                                <td>Vigente</td>
+                                <td>{{d.idDescuento}}</td>                            
+                                <td>{{d.descripcion}}</td>                            
+                                <td>{{d.valor}}</td>                            
+                                <td><a href="/descuentos/baja/{{d.idDescuento}}" class="btn btn-danger" role="button">Baja vigencia</a></td>                           
+                            </tr>
+                        {% endif %}
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% include 'footer.html' %}

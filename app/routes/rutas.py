@@ -140,3 +140,47 @@ def bajaestadiadesdelista(patente):
 def listar():
     lista=controlador.listarEstadiasClientesActivos()
     return render_template('listado.html',data_lista=lista)
+
+@global_rutas.route('/descuentos',methods=['GET','POST'])
+@login_required
+def listardescuentos():
+    if request.method=='POST':
+        descripcion= request.form['txtDescripcion']
+        valor= request.form['txtValor']
+        if descripcion=='' or valor=='':
+            flash('Error, complete todos los campos')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+        else:
+            controlador.nuevoDescuento(descripcion,valor)
+            flash('Registrado Correctamente')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+    else:
+        descuentos=controlador.listarDescuentos()
+        print(descuentos)
+        return render_template('listadodescuentos.html',data_descuentos=descuentos)
+
+@global_rutas.route('/descuentos/<accion>/<idDescuento>')
+@login_required
+def accionlistadescuentos(accion,idDescuento):
+    if accion=='baja':
+        resultado=controlador.bajaDescuento(idDescuento)
+        if resultado=='Baja':
+            flash('Baja Realizada')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+        elif resultado=='Desactivado':
+            flash('El descuento ya se encontraba inactivo')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+        else:
+            flash('El id de cliente ingresado es inexistente ')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+    elif accion=='alta':
+        resultado=controlador.altaDescuento(idDescuento)
+        if resultado=='Alta':
+            flash('Alta Realizada')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+        elif resultado=='Activo':
+            flash('El descuento ya se encontraba activo')
+            return redirect(url_for('rutasglobales.listardescuentos'))
+        else:
+            flash('El id de cliente ingresado es inexistente ')
+            return redirect(url_for('rutasglobales.listardescuentos'))
