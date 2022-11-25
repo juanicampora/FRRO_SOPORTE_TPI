@@ -26,12 +26,12 @@ def login():
             return redirect(url_for('rutasglobales.inicio'))
         elif resultado[0]=='MalUser':
             flash('Usuario incorrecto')
-            return render_template("login2.html")
+            return render_template("login.html")
         else:
             flash('Contraseña incorrecta')
-            return render_template("login2.html")
+            return render_template("login.html")
     else:
-        return render_template("login2.html")
+        return render_template("login.html")
         
 @global_rutas.route('/registro')
 def registro():
@@ -71,7 +71,7 @@ def inicio():
 @login_required
 def alta():
     if controlador.verifParkingDisponible():
-        return render_template('alta2.html')
+        return render_template('alta.html')
     else:
         flash('No hay Parking Disponible')
         return render_template('mensaje.html')
@@ -89,21 +89,21 @@ def altaestadia():
     resultado=controlador.altaCliente(nuevocliente)
     if resultado=='Alta':
         flash('Alta')
-        return render_template('alta2.html')
+        return render_template('alta.html')
     elif resultado=='Activo':
         flash('El cliente previamente fue dado de Alta')
-        return render_template('alta2.html')
+        return render_template('alta.html')
     elif resultado=='Actualizado':
         flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
-        return render_template('alta2.html')
+        return render_template('alta.html')
     else:
         flash('Alta realizada a un cliente registrado anteriormente')
-        return render_template('alta2.html')
+        return render_template('alta.html')
 
 @global_rutas.route('/baja')
 @login_required
 def baja():
-    return render_template('baja2.html')
+    return render_template('baja.html')
 
 @global_rutas.route('/bajaenv', methods=['post'])
 @login_required
@@ -112,13 +112,13 @@ def bajaestadia():
     resultado=controlador.bajaCliente(patentebaja)
     if resultado=='Baja':
         flash('Baja')
-        return render_template('baja2.html')
+        return render_template('baja.html')
     elif resultado=='Inactivo':
         flash('La patente ingresada corresponde a un cliente inactivo')
-        return render_template('baja2.html')
+        return render_template('baja.html')
     else:
         flash('La patente ingresada no corresponde a un cliente ')
-        return render_template('baja2.html')
+        return render_template('baja.html')
 
 @global_rutas.route('/bajaenv/<patente>')
 @login_required
