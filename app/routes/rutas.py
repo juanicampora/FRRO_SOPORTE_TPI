@@ -53,7 +53,7 @@ def registrotrabajador():
     resultado=controlador.altaTrabajador(nuevoTrabajador)
     if resultado:
         flash('Registrado correctamente, Inicie Sesión')
-        return render_template('registrocorrecto.html') #Como mejora se podria usar login2.html usando un if para que muestre cartel verde en vez de rojo
+        return redirect(url_for('rutasglobales.login'))
     else:
         flash('El usuario ingresado ya existe')
         return render_template('registro.html')
@@ -100,11 +100,6 @@ def altaestadia():
     else:
         flash('Alta realizada a un cliente registrado anteriormente')
         return render_template('alta2.html')
-
-@global_rutas.route('/add')     #esto deberia reemplazarse con el /alta
-@login_required
-def add():
-    return render_template('add.html')
 
 @global_rutas.route('/baja')
 @login_required

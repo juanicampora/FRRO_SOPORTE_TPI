@@ -4,7 +4,7 @@ En este documento se describe el enunciado y pasos a seguir para TPI.
 
 Pasos a Seguir:
 
-- [ ] Realizar un Fork del [repositorio base](). Agregar como colaboradores a los profesores y los miembros del equipo.
+- [x] Realizar un Fork del [repositorio base](). Agregar como colaboradores a los profesores y los miembros del equipo.
 - [ ] Se debe crear un "**Tag**" **semanal** etiquetando a los profesores indicando los cambios hechos en el sistema.
 - [ ] Completar el archivo [PROYECTO.md](PROYECTO.md) con la información necesaria
 - [ ] Validar cumplimiento de todos los archivos checklist.
