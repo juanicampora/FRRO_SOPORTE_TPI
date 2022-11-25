@@ -24,7 +24,6 @@ def login():
             print(f'Logueado usuario: {resultado[1].nombreApellido}')
             flash('Bienvenido ')
             return redirect(url_for('rutasglobales.inicio'))
-            #return render_template('index.html')
         elif resultado[0]=='MalUser':
             flash('Usuario incorrecto')
             return render_template("login2.html")
@@ -129,7 +128,6 @@ def bajaestadiadesdelista(patente):
     if resultado=='Baja':
         flash('Baja Realizada')
         return redirect(url_for('rutasglobales.listar'))
-        #return render_template('listado.html')
     elif resultado=='Inactivo':
         flash('La patente ingresada corresponde a un cliente inactivo')
         return render_template('listado.html')
@@ -141,8 +139,4 @@ def bajaestadiadesdelista(patente):
 @login_required
 def listar():
     lista=controlador.listarEstadiasClientesActivos()
-    #i=0
-    #for l in lista:
-    #    print(lista[i])
-    #    i=i+1
     return render_template('listado.html',data_lista=lista)
