@@ -7,7 +7,7 @@ from app.controller.controlador import Controlador
 
 
 global_rutas=Blueprint("rutasglobales",__name__,template_folder=Config.CARPETA_TEMPLATES,static_folder=Config.CARPETA_STATIC)
-controlador=Controlador()
+controlador=Controlador(Config.cantParkings)
 
 @global_rutas.route('/')
 def raiz():
@@ -81,6 +81,9 @@ def alta():
 def altaestadia():
     nuevapatente=str(request.form.get('patente'))
     celularingresado=request.form.get('celular')
+    if nuevapatente=='':
+        flash('Ingrese una patente')
+        return redirect(url_for('rutasglobales.alta'))
     if celularingresado=='':
         nuevocelular=None
     else:
@@ -89,16 +92,16 @@ def altaestadia():
     resultado=controlador.altaCliente(nuevocliente)
     if resultado=='Alta':
         flash('Alta')
-        return render_template('alta.html')
+        return redirect(url_for('rutasglobales.alta'))
     elif resultado=='Activo':
         flash('El cliente previamente fue dado de Alta')
-        return render_template('alta.html')
+        return redirect(url_for('rutasglobales.alta'))
     elif resultado=='Actualizado':
         flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
-        return render_template('alta.html')
+        return redirect(url_for('rutasglobales.alta'))
     else:
         flash('Alta realizada a un cliente registrado anteriormente')
-        return render_template('alta.html')
+        return redirect(url_for('rutasglobales.alta'))
 
 @global_rutas.route('/baja')
 @login_required
@@ -112,13 +115,13 @@ def bajaestadia():
     resultado=controlador.bajaCliente(patentebaja)
     if resultado=='Baja':
         flash('Baja')
-        return render_template('baja.html')
+        return redirect(url_for('rutasglobales.baja'))
     elif resultado=='Inactivo':
         flash('La patente ingresada corresponde a un cliente inactivo')
-        return render_template('baja.html')
+        return redirect(url_for('rutasglobales.baja'))
     else:
         flash('La patente ingresada no corresponde a un cliente ')
-        return render_template('baja.html')
+        return redirect(url_for('rutasglobales.baja'))
 
 @global_rutas.route('/bajaenv/<patente>')
 @login_required

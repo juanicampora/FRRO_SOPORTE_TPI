@@ -5,3 +5,4 @@ class Config:
     CARPETA_TEMPLATES=os.path.abspath('./app/views/templates')
     CARPETA_STATIC=os.path.abspath('./app/views/static')
     SECRET_KEY='unallavesecretaredificil'
+    cantParkings=5

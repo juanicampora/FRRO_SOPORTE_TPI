@@ -108,8 +108,8 @@ class bbdd():
         self.session.query(Descuento).filter_by(idDescuento=idAlta).update({Descuento.vigente:True})
         self.session.commit()
 
-    def __init__(self):
-        self.cantidad_parkings=30
+    def __init__(self,cantParkings):
+        self.cantidad_parkings=cantParkings
 
         engine=create_engine('sqlite:///app/db/basedatos.sqlite',connect_args={'check_same_thread': False})
         Base.metadata.create_all(engine)

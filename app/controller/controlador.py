@@ -3,9 +3,9 @@ from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
 from os import path
 
 class Controlador():
-    def __init__(self):
+    def __init__(self,cantParkings):
         existiaBD=path.exists('app/db/basedatos.sqlite') # verifica si la bbdd existia antes intentar conectarse y crearla para luego inicializarla
-        self.base=bbdd()
+        self.base=bbdd(cantParkings)
         if not(existiaBD):
             self.base.inicializar_tablas()
     
@@ -28,7 +28,7 @@ class Controlador():
         return self.base.alta_trabajador(nuevoTrabajador)
 
     def verifParkingDisponible(self)->bool:
-        if self.base.nro_parking_disponible is None:
+        if self.base.nro_parking_disponible() is None:
             return False
         else:
             return True 
