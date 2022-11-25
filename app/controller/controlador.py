@@ -1,11 +1,14 @@
 from app.db.basedatos import bbdd
 from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
+from os import path
 
 class Controlador():
     def __init__(self):
+        existiaBD=path.exists('app/db/basedatos.sqlite') # verifica si la bbdd existia antes intentar conectarse y crearla para luego inicializarla
         self.base=bbdd()
-        #self.base.inicializar_tablas() # QUITAR COMENTARIO PARA INICIALIZAR LOS PARKINGS
-
+        if not(existiaBD):
+            self.base.inicializar_tablas()
+    
     def devTrabajador(self,usuarioIngresado):
         return self.base.dev_trabajador_id(usuarioIngresado)
 
@@ -34,9 +37,7 @@ class Controlador():
         return self.base.dev_cliente(patenteIngresada)
 
     def altaCliente(self,nuevoCliente:Cliente):
-        acortarPatente=nuevoCliente.patente
-        nuevoCliente.patente=acortarPatente.replace(" ", "")
-        print(nuevoCliente.patente)
+        nuevoCliente.patente=nuevoCliente.patente.replace(" ", "")
         viejoCliente=self.devCliente(nuevoCliente.patente)
         nroParking=self.base.nro_parking_disponible()
         if viejoCliente is None:
@@ -53,5 +54,20 @@ class Controlador():
             self.base.activar_estadia_cliente(nuevoCliente,nroParking)
             return 'Activado'
 
-    def listarEstadiasActivas(self):
-        self.base.dev_estadias_activas()
+    def bajaCliente(self,patentebaja):
+        patentebaja=patentebaja.replace(" ", "")
+        if self.devCliente(patentebaja) is None:
+            return 'Mal'
+        elif self.devCliente(patentebaja).activo:
+            nroparkingliberar=self.base.desactivar_estadia_cliente(patentebaja)
+            self.base.liberar_parking(nroparkingliberar)
+            return 'Baja'
+        else:
+            return 'Inactivo'
+
+    def listarEstadiasClientesActivos(self):
+        return self.base.dev_estadias_activas()
+        
+
+
+        

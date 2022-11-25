@@ -8,20 +8,22 @@
             <table class="table table-borded table-responsive table-striped " id="table-list" >
                 <thead class="table-dark">
                     <tr>
+                        <td>Piso</td>
+                        <td>Nro Parking</td>
                         <td>Patente</td>
                         <td>Celular</td>
-                        <td>HoraEntrada</td>
-                        <td>HoraSalida</td>
+                        <td>Fecha y Hora Entrada</td>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% for e in estadia %}
+                    {% for l in data_lista %}
                         <tr>
-                            <td>{{p.patente}}</td>
-                            <td>{{p.numero}}</td>
-                            <td>{{}}</td>
-                            <td>12:30</td>
+                            <td>{{l[0]}}</td>                            
+                            <td>{{l[1]}}</td>                            
+                            <td>{{l[2]}}</td>                            
+                            <td>{{l[3]}}</td>                            
+                            <td>{{l[4]}}</td>                            
                         </tr>
                     {% endfor %}     
                 </tbody>

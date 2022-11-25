@@ -3,6 +3,7 @@ from app.configuracion import Config
 from app.routes.rutas import global_rutas
 from flask_login import LoginManager
 
+
 app=Flask(__name__, template_folder=Config.CARPETA_TEMPLATES, static_folder=Config.CARPETA_STATIC)
 app.config.from_object(Config)
 

@@ -81,7 +81,11 @@ def alta():
 @login_required
 def altaestadia():
     nuevapatente=str(request.form.get('patente'))
-    nuevocelular=int(request.form.get('celular'))
+    celularingresado=request.form.get('celular')
+    if celularingresado=='':
+        nuevocelular=None
+    else:
+        nuevocelular=int(celularingresado)
     nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular,activo=True)
     resultado=controlador.altaCliente(nuevocliente)
     if resultado=='Alta':
@@ -105,10 +109,30 @@ def add():
 @global_rutas.route('/baja')
 @login_required
 def baja():
-    return render_template('baja.html')
+    return render_template('baja2.html')
+
+@global_rutas.route('/bajaenv', methods=['post'])
+@login_required
+def bajaestadia():
+    patentebaja=str(request.form.get('patente'))
+    resultado=controlador.bajaCliente(patentebaja)
+    if resultado=='Baja':
+        flash('Baja')
+        return render_template('baja2.html')
+    elif resultado=='Inactivo':
+        flash('La patente ingresada corresponde a un cliente inactivo')
+        return render_template('baja2.html')
+    else:
+        flash('La patente ingresada no corresponde a un cliente ')
+        return render_template('baja2.html')
+
 
 @global_rutas.route('/listado')
 @login_required
 def listar():
-    data=controlador.listarEstadiasActivas()
-    return render_template('listado.html',data=data)
+    lista=controlador.listarEstadiasClientesActivos()
+    #i=0
+    #for l in lista:
+    #    print(lista[i])
+    #    i=i+1
+    return render_template('listado.html',data_lista=lista)
