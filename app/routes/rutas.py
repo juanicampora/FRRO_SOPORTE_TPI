@@ -95,7 +95,7 @@ def altaestadia():
         flash('El cliente previamente fue dado de Alta')
         return render_template('alta2.html')
     elif resultado=='Actualizado':
-        flash('El cliente previamente fue dado de Alta, se actualizó su celular')
+        flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
         return render_template('alta2.html')
     else:
         flash('Alta realizada a un cliente registrado anteriormente')
@@ -126,6 +126,21 @@ def bajaestadia():
         flash('La patente ingresada no corresponde a un cliente ')
         return render_template('baja2.html')
 
+@global_rutas.route('/bajaenv/<patente>')
+@login_required
+def bajaestadiadesdelista(patente):
+    patentebaja=patente
+    resultado=controlador.bajaCliente(patentebaja)
+    if resultado=='Baja':
+        flash('Baja Realizada')
+        return redirect(url_for('rutasglobales.listar'))
+        #return render_template('listado.html')
+    elif resultado=='Inactivo':
+        flash('La patente ingresada corresponde a un cliente inactivo')
+        return render_template('listado.html')
+    else:
+        flash('La patente ingresada no corresponde a un cliente ')
+        return render_template('listado.html')
 
 @global_rutas.route('/listado')
 @login_required

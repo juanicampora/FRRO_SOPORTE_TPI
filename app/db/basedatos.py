@@ -85,22 +85,13 @@ class bbdd():
         #lista=self.session.query(Estadia,Cliente,Parking).filter_by(fechaHoraEgreso=None).join(Cliente).join(Parking).all()
         lista_desorganizada=self.session.query(Estadia,Cliente,Parking).filter_by(fechaHoraEgreso=None).join(Cliente).join(Parking).order_by(Parking.piso,Parking.nroParking).all()
         i=0
-        columnas=6
+        columnas=5
         filas=len(lista_desorganizada)
         lista=[[0 for _ in range(columnas)]]*filas
         for l in lista_desorganizada:
             #print(f'Piso: {l[2].piso} Nro Parking: {l[0].nroParking} Patente:{l[0].patente} Celular:{l[1].celular} FechaHoraIngreso: {l[0].fechaHoraIngreso}')
             lista[i]=[l[2].piso,l[0].nroParking,l[0].patente,l[1].celular,l[0].fechaHoraIngreso]
-            i+=1
-        
-        print(lista[0])
-        print(lista[1])
-        print(lista[2])
-        print(lista[3])
-        
-        #for i in range(4):
-        #    print(lista[i])
-
+            i+=1        
         return lista
 
     def __init__(self):

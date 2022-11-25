@@ -1,10 +1,18 @@
 {% include 'header.html' %}
     <br>
     <br>
-    <br>
-    <br>
     <div class="container">
         <div class="table-content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>   
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <table class="table table-borded table-responsive table-striped " id="table-list" >
                 <thead class="table-dark">
                     <tr>
@@ -13,6 +21,7 @@
                         <td>Patente</td>
                         <td>Celular</td>
                         <td>Fecha y Hora Entrada</td>
+                        <td>Dar Baja</td>
                     </tr>
                 </thead>
 
@@ -23,7 +32,8 @@
                             <td>{{l[1]}}</td>                            
                             <td>{{l[2]}}</td>                            
                             <td>{{l[3]}}</td>                            
-                            <td>{{l[4]}}</td>                            
+                            <td>{{l[4]}}</td> 
+                            <td><a href="/bajaenv/{{l[2]}}" class="btn btn-danger" role="button">Baja</a></td>                           
                         </tr>
                     {% endfor %}     
                 </tbody>
