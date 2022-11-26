@@ -146,44 +146,67 @@ def listar():
 
 @global_rutas.route('/descuentos',methods=['GET','POST'])
 @login_required
-def listardescuentos():
+def descuentos():
     if request.method=='POST':
         descripcion= request.form['txtDescripcion']
         valor= request.form['txtValor']
         if descripcion=='' or valor=='':
             flash('Error, complete todos los campos')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
         else:
             controlador.nuevoDescuento(descripcion,valor)
             flash('Registrado Correctamente')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
     else:
         descuentos=controlador.listarDescuentos()
-        print(descuentos)
-        return render_template('listadodescuentos.html',data_descuentos=descuentos)
+        return render_template('descuentos.html',data_descuentos=descuentos)
 
 @global_rutas.route('/descuentos/<accion>/<idDescuento>')
 @login_required
-def accionlistadescuentos(accion,idDescuento):
+def acciondescuentos(accion,idDescuento):
     if accion=='baja':
         resultado=controlador.bajaDescuento(idDescuento)
         if resultado=='Baja':
             flash('Baja Realizada')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
         elif resultado=='Desactivado':
             flash('El descuento ya se encontraba inactivo')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
         else:
             flash('El id de cliente ingresado es inexistente ')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
     elif accion=='alta':
         resultado=controlador.altaDescuento(idDescuento)
         if resultado=='Alta':
             flash('Alta Realizada')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
         elif resultado=='Activo':
             flash('El descuento ya se encontraba activo')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
         else:
             flash('El id de cliente ingresado es inexistente ')
-            return redirect(url_for('rutasglobales.listardescuentos'))
+            return redirect(url_for('rutasglobales.descuentos'))
+
+@global_rutas.route('/precios',methods=['GET','POST'])
+@login_required
+def precios():
+    if request.method=='POST':
+        precioBase= request.form['txtPrecioBase']
+        precioMinuto= request.form['txtPrecioMinuto']
+        if precioBase=='' or precioMinuto=='':
+            flash('Error, complete todos los campos')
+            return redirect(url_for('rutasglobales.precios'))
+        else:
+            controlador.bajaPrecioAnterior()
+            controlador.nuevoPrecio(precioBase,precioMinuto)
+            flash('Registrado Correctamente')
+            return redirect(url_for('rutasglobales.precios'))
+    else:
+        precios=controlador.listarPrecios()
+        print(precios)
+        return render_template('precios.html',data_precios=precios)
+
+@global_rutas.route('/baja/montopagar',methods=['GET','POST'])
+@login_required
+def bajamontopagar():
+    return render_template('pruebamodal.html')

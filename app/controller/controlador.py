@@ -95,5 +95,13 @@ class Controlador():
             self.base.activar_descuento(idalta)
             return 'Alta'
 
+    def nuevoPrecio(self,precioBase,precioMinuto):
+        self.base.nuevo_precio(precioBase,precioMinuto)
+
+    def bajaPrecioAnterior(self):
+        self.base.baja_precio_anterior()
+
+    def listarPrecios(self):
+        return self.base.dev_lista_precios()
 
         

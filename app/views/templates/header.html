@@ -45,6 +45,11 @@
         {% else %}
           <li class="nav-item"><a href="/descuentos" class="nav-link">Descuentos</a></li>
         {% endif %}
+        {% if request.path=='/precios' %}
+          <li class="nav-item"><a href="/precios" class="nav-link active">Precios</a></li>
+        {% else %}
+          <li class="nav-item"><a href="/precios" class="nav-link">Precios</a></li>
+        {% endif %}
       </ul>
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"></a>
       <ul class="nav nav-pills">

@@ -1,0 +1,95 @@
+{% include 'header.html' %}
+    <style>
+        table,
+        table td {
+        border: 1px solid #cccccc;
+        }
+        td {
+        text-align: center;
+        vertical-align: middle;
+        }
+    </style>
+    <br>
+    <br>
+    <div class="container">
+        <div class="table-content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message=="Error, complete todos los campos" %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {% else %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>   
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <h1>Nuevos Precios</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Precio Base</td>
+                        <td>Precio Minuto</td>
+                        <td>Acción</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-secondary">
+                        <form class="" action="/precios" method="post">                            
+                            <td  text-align:center>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtPrecioBase" name="txtPrecioBase" placeholder="Password">
+                                    <label for="txtPrecioBase">Precio Base</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtPrecioMinuto" name="txtPrecioMinuto" placeholder="Password">
+                                    <label for="txtPrecioMinuto">Precio Minuto</label>
+                                </div>
+                            </td>
+                            <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
+                        </form>                            
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Historial Precios</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Vigencia</td>
+                        <td>Precio Base</td>
+                        <td>Precio Minuto</td>
+                        <td>Fecha Alta</td>
+                        <td>Fecha Baja</td>                       
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for p in data_precios %}
+                        {% if p.fechaBaja==None %}
+                            <tr class="table-success">
+                                <td>Vigente</td>
+                                <td>{{p.precioBase}}</td>                            
+                                <td>{{p.precioMinuto}}</td>                            
+                                <td>{{p.fechaAlta}}</td>       
+                                <td>{{p.fechaBaja}}</td>                     
+                            </tr>
+                        {% else %}
+                            <tr class="table-danger">
+                                <td>No Vigente</td>
+                                <td>{{p.precioBase}}</td>                            
+                                <td>{{p.precioMinuto}}</td>                            
+                                <td>{{p.fechaAlta}}</td>       
+                                <td>{{p.fechaBaja}}</td>                         
+                            </tr>
+                        {% endif %}
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% include 'footer.html' %}

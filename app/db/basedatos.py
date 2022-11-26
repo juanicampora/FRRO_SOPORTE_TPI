@@ -1,6 +1,6 @@
 from datetime import datetime
 from random import randint
-from sqlalchemy import create_engine,insert,select
+from sqlalchemy import create_engine,insert,select,desc
 from sqlalchemy.orm import sessionmaker
 from .modelos import Base,Precio,Descuento,Cliente,Trabajador,Parking,Estadia
 
@@ -11,8 +11,10 @@ class bbdd():
     def inicializar_tablas(self):
         nuevo_descuento=Descuento(1,'Sin descuento',0,True)
         nuevo_trabajador=Trabajador('admin','123','Administrador')
+        nuevo_precio=Precio(None,100,10,datetime.now().strftime("%d/%m/%Y %H:%M:%S"),None)
         self.session.add(nuevo_descuento)
         self.session.add(nuevo_trabajador)
+        self.session.add(nuevo_precio)
         self.session.commit()
         for i in range(1,self.cantidad_parkings+1):
             if i<=self.cantidad_parkings/3:
@@ -107,6 +109,17 @@ class bbdd():
     def activar_descuento(self,idAlta):
         self.session.query(Descuento).filter_by(idDescuento=idAlta).update({Descuento.vigente:True})
         self.session.commit()
+
+    def nuevo_precio(self,precioBase,precioMinuto):
+        nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=precioMinuto,fechaAlta=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),fechaBaja=None)
+        self.session.add(nuevoPrecio)
+        self.session.commit()
+
+    def dev_lista_precios(self):
+        return self.session.query(Precio).order_by(desc(Precio.fechaAlta)).all()    
+
+    def baja_precio_anterior(self):
+        self.session.query(Precio).filter_by(fechaBaja=None).update({Precio.fechaBaja:datetime.now().strftime("%d/%m/%Y %H:%M:%S")})
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings
