@@ -67,41 +67,39 @@ def logout():
 def inicio():
     return render_template('index.html')
 
-@global_rutas.route('/alta')
+@global_rutas.route('/alta' ,methods=['GET','POST'])
 @login_required
 def alta():
-    if controlador.verifParkingDisponible():
-        return render_template('alta.html')
+    if request.method=='POST':
+        nuevapatente=str(request.form.get('patente'))
+        celularingresado=request.form.get('celular')
+        if nuevapatente=='':
+            flash('Ingrese una patente')
+            return redirect(url_for('rutasglobales.alta'))
+        if celularingresado=='':
+            nuevocelular=None
+        else:
+            nuevocelular=int(celularingresado)
+        nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular,activo=True)
+        resultado=controlador.altaCliente(nuevocliente)
+        if resultado=='Alta':
+            flash('Alta')
+            return redirect(url_for('rutasglobales.alta'))
+        elif resultado=='Activo':
+            flash('El cliente previamente fue dado de Alta')
+            return redirect(url_for('rutasglobales.alta'))
+        elif resultado=='Actualizado':
+            flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
+            return redirect(url_for('rutasglobales.alta'))
+        else:
+            flash('Alta realizada a un cliente registrado anteriormente')
+            return redirect(url_for('rutasglobales.alta'))
     else:
-        flash('No hay Parking Disponible')
-        return render_template('mensaje.html')
-
-@global_rutas.route('/altaenv', methods=['post'])
-@login_required
-def altaestadia():
-    nuevapatente=str(request.form.get('patente'))
-    celularingresado=request.form.get('celular')
-    if nuevapatente=='':
-        flash('Ingrese una patente')
-        return redirect(url_for('rutasglobales.alta'))
-    if celularingresado=='':
-        nuevocelular=None
-    else:
-        nuevocelular=int(celularingresado)
-    nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular,activo=True)
-    resultado=controlador.altaCliente(nuevocliente)
-    if resultado=='Alta':
-        flash('Alta')
-        return redirect(url_for('rutasglobales.alta'))
-    elif resultado=='Activo':
-        flash('El cliente previamente fue dado de Alta')
-        return redirect(url_for('rutasglobales.alta'))
-    elif resultado=='Actualizado':
-        flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
-        return redirect(url_for('rutasglobales.alta'))
-    else:
-        flash('Alta realizada a un cliente registrado anteriormente')
-        return redirect(url_for('rutasglobales.alta'))
+        if controlador.verifParkingDisponible():
+            return render_template('alta.html')
+        else:
+            flash('No hay Parking Disponible')
+            return render_template('mensaje.html')
 
 @global_rutas.route('/baja',methods=['GET','POST'])
 @global_rutas.route('/baja/<patente>',methods=['GET','POST'])
