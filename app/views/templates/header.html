@@ -40,15 +40,24 @@
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
       </a>
       <ul class="nav nav-pills">
-        {% if request.path=='/descuentos' %}
-          <li class="nav-item"><a href="/descuentos" class="nav-link active">Descuentos</a></li>
+        {% if request.path=='/asignardescuento' or '/asignardescuento/' in request.path %}
+          <li class="nav-item"><a href="/asignardescuento" class="nav-link active">Asignar Descuento</a></li>
         {% else %}
-          <li class="nav-item"><a href="/descuentos" class="nav-link">Descuentos</a></li>
+          <li class="nav-item"><a href="/asignardescuento" class="nav-link">Asignar Descuento</a></li>
+        {% endif %}
+      </ul>
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      </a>
+      <ul class="nav nav-pills">
+        {% if request.path=='/descuentos' %}
+          <li class="nav-item"><a href="/descuentos" class="nav-link active">Actualizar Descuentos</a></li>
+        {% else %}
+          <li class="nav-item"><a href="/descuentos" class="nav-link">Actualizar Descuentos</a></li>
         {% endif %}
         {% if request.path=='/precios' %}
-          <li class="nav-item"><a href="/precios" class="nav-link active">Precios</a></li>
+          <li class="nav-item"><a href="/precios" class="nav-link active">Actualizar Precios</a></li>
         {% else %}
-          <li class="nav-item"><a href="/precios" class="nav-link">Precios</a></li>
+          <li class="nav-item"><a href="/precios" class="nav-link">Actualizar Precios</a></li>
         {% endif %}
       </ul>
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"></a>

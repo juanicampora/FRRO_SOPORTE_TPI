@@ -37,6 +37,7 @@ class Controlador():
             return True 
     
     def devCliente(self,patenteIngresada):
+        patenteIngresada=patenteIngresada.replace(" ", "")
         return self.base.dev_cliente(patenteIngresada)
     
     def devDescuento(self,idIngresado):
@@ -104,6 +105,9 @@ class Controlador():
     def listarDescuentos(self):
         return self.base.dev_lista_descuentos()
 
+    def listarDescuentosVigentes(self):
+        return self.base.dev_lista_descuentos_vigentes()
+
     def nuevoDescuento(self,descripcionIngresada,valorIngresado):
         self.base.nuevo_descuento(descripcionIngresada,valorIngresado)
 
@@ -134,4 +138,15 @@ class Controlador():
     def listarPrecios(self):
         return self.base.dev_lista_precios()
 
-        
+    def asignarDescuento(self,patenteIngresada,idDescuentoIngresado:int):
+        clienteIngresado=self.devCliente(patenteIngresada)
+        idDescuentoClienteIngresado=int(clienteIngresado.idDescuento)
+        if  clienteIngresado==None:
+            return 'No existe cliente con la patente ingresada'
+        if idDescuentoClienteIngresado==idDescuentoIngresado:
+            return 'Ya tiene ese descuento asignado'
+        else:
+            print('ASIGNADOOOO')
+            self.base.asignar_descuento(clienteIngresado.patente,idDescuentoIngresado)
+            return 'Asignado'
+             

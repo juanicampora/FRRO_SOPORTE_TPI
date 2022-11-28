@@ -208,8 +208,33 @@ def precios():
 def bajamontopagar():
     return render_template('bajaresultadomonto.html')
 
-
-@global_rutas.route('/prueba',methods=['GET','POST']) 
+@global_rutas.route('/asignardescuento/<idDescuento>',methods=['GET','POST']) 
+@global_rutas.route('/asignardescuento',methods=['GET','POST']) 
 @login_required
-def prueba():
-    return render_template('PRUEBA.html')
+def asignardescuento(idDescuento=None):
+    if request.method=='POST':
+        patente= request.form['txtPatente']
+        if patente=='':
+            flash('Error, complete todos los campos')
+            return redirect(f'/asignardescuento/{idDescuento}')
+        elif idDescuento=='Nada':
+            flash('Error, seleccione un descuento')
+            return redirect(url_for('rutasglobales.asignardescuento'))
+        else:
+            resultado=controlador.asignarDescuento(patente,int(idDescuento))
+            if resultado=='Asignado':
+                flash('Descuento Asignado')
+                return redirect(url_for('rutasglobales.asignardescuento'))
+            elif resultado=='Ya tiene ese descuento asignado':
+                flash(resultado)
+                return redirect(url_for('rutasglobales.asignardescuento'))
+            else:
+                flash(resultado)
+                return redirect(f'/asignardescuento/{idDescuento}')
+    else:
+        if idDescuento==None:
+            descuentos=controlador.listarDescuentos()
+            return render_template('asignardescuento1.html',data_descuentos=descuentos)
+        else:
+            descuento=controlador.devDescuento(idDescuento)
+            return render_template('asignardescuento2.html',data_descuento=descuento)

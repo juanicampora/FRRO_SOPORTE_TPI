@@ -100,6 +100,9 @@ class bbdd():
     def dev_lista_descuentos(self):
         return self.session.query(Descuento).all()
 
+    def dev_lista_descuentos_vigentes(self):
+        return self.session.query(Descuento).filter_by(vigente=True).all()   
+
     def nuevo_descuento(self,descripcionIngresada,valorIngresado):
         nuevoDescuento=Descuento(idDescuento=None,descripcion=descripcionIngresada,valor=valorIngresado,vigente=None)
         self.session.add(nuevoDescuento)
@@ -128,6 +131,10 @@ class bbdd():
 
     def dev_precio_actual(self):
         return self.session.query(Precio).filter_by(fechaBaja=None).first()
+
+    def asignar_descuento(self,patenteCliente,idDescuentoIngresado):
+        self.session.query(Cliente).filter_by(patente=patenteCliente).update({Cliente.idDescuento:idDescuentoIngresado})
+        self.session.commit()
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings
