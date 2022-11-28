@@ -1,7 +1,7 @@
 {% include 'header.html' %}
 {% with messages = get_flashed_messages() %}
   {% if messages %}
-  <div class="d-grid justify-content-center bg-secondary gap-5 mb-3 mt-3">
+  <div class="d-grid justify-content-center bg-secondary gap-5 pb-0 pt-4">
     {% for message in messages %}
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>{{ message }}{{current_user.nombreApellido}}</strong>
@@ -11,7 +11,7 @@
   </div>
   {% endif %}
 {% endwith %} 
-<div class="container-fluid border bg-secondary pt-5 pb-5 px-5">
+<div class="container-fluid bg-secondary pt-5 pb-5 px-5">
   <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
     <div class="col">
       <div class="card mb-4 rounded-3 shadow-sm">
