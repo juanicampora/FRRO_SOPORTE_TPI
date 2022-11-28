@@ -12,7 +12,7 @@ El siguiente checklist permite una fácil detección de malas prácticas y posib
 ## Web
 
 - [ ] Utiliza errores HTTP (403, 404, etc).
-- [ ] Es multiusuario (puede usarse desde una ventana común y una de incógnito de manera independiente).
+- [x] Es multiusuario (puede usarse desde una ventana común y una de incógnito de manera independiente).
 
 
 ## Opcional
