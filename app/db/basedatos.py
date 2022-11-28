@@ -1,17 +1,15 @@
 from datetime import datetime
-from random import randint
-from sqlalchemy import create_engine,insert,select,desc
+from sqlalchemy import create_engine,desc
 from sqlalchemy.orm import sessionmaker
 from .modelos import Base,Precio,Descuento,Cliente,Trabajador,Parking,Estadia
-
-from sqlalchemy.ext.declarative import declarative_base
+from app.configuracion import Config
 
 
 class bbdd():
     def inicializar_tablas(self):
         nuevo_descuento=Descuento(1,'Sin descuento',0,True)
         nuevo_trabajador=Trabajador('admin','123','Administrador')
-        nuevo_precio=Precio(None,100,10,datetime.now().strftime("%d/%m/%Y %H:%M:%S"),None)
+        nuevo_precio=Precio(None,100,10,datetime.now().strftime(Config.formatoFecha),None)
         self.session.add(nuevo_descuento)
         self.session.add(nuevo_trabajador)
         self.session.add(nuevo_precio)
@@ -54,6 +52,10 @@ class bbdd():
         self.session.add(nuevoCliente)
         self.session.commit()
     
+    def asignar_descuento_basico(self,patenteCliente):
+        self.session.query(Cliente).filter_by(patente=patenteCliente).update({Cliente.idDescuento:1})
+        self.session.commit()
+
     def actualizar_celular_cliente(self,nuevoCliente:Cliente):
         self.session.query(Cliente).filter_by(patente=nuevoCliente.patente).update({Cliente.celular:nuevoCliente.celular})
         self.session.commit()
@@ -67,7 +69,7 @@ class bbdd():
 
     def activar_estadia_cliente(self,nuevoCliente:Cliente,nroParkingAsignar:int):
         self.session.query(Cliente).filter_by(patente=nuevoCliente.patente).update({Cliente.activo:True})
-        nuevaEstadia=Estadia(nuevoCliente.patente,datetime.now().strftime("%d/%m/%Y %H:%M:%S"),None,nroParkingAsignar)
+        nuevaEstadia=Estadia(nuevoCliente.patente,datetime.now().strftime(Config.formatoFecha),None,nroParkingAsignar)
         self.session.query(Parking).filter_by(nroParking=nroParkingAsignar).update({Parking.ocupado:True})
         self.session.add(nuevaEstadia)
         self.session.commit()
@@ -75,12 +77,14 @@ class bbdd():
     def desactivar_estadia_cliente(self,patenteBaja):
         self.session.query(Cliente).filter_by(patente=patenteBaja).update({Cliente.activo:False})
         estadia=self.session.query(Estadia).filter_by(patente=patenteBaja,fechaHoraEgreso=None).first()
-        self.session.query(Estadia).filter_by(patente=patenteBaja).update({Estadia.fechaHoraEgreso:datetime.now().strftime("%d/%m/%Y %H:%M:%S")})
+        self.session.query(Estadia).filter_by(patente=patenteBaja).update({Estadia.fechaHoraEgreso:datetime.now().strftime(Config.formatoFecha)})
+        estadiaDesactivada=self.session.query(Estadia).filter_by(patente=patenteBaja,fechaHoraIngreso=estadia.fechaHoraIngreso).first()
         self.session.commit()
-        return estadia.nroParking
+        return {'nroParking':estadia.nroParking,'estadiaDesactivada':estadiaDesactivada}
 
     def liberar_parking(self,nroParkingLiberar):
         self.session.query(Parking).filter_by(nroParking=nroParkingLiberar).update({Parking.ocupado:False})
+        self.session.commit()
 
     def dev_estadias_activas(self):
         lista_desorganizada=self.session.query(Estadia,Cliente,Parking).filter_by(fechaHoraEgreso=None).join(Cliente).join(Parking).order_by(Parking.piso,Parking.nroParking).all()
@@ -111,7 +115,7 @@ class bbdd():
         self.session.commit()
 
     def nuevo_precio(self,precioBase,precioMinuto):
-        nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=precioMinuto,fechaAlta=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),fechaBaja=None)
+        nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=precioMinuto,fechaAlta=datetime.now().strftime(Config.formatoFecha),fechaBaja=None)
         self.session.add(nuevoPrecio)
         self.session.commit()
 
@@ -119,7 +123,11 @@ class bbdd():
         return self.session.query(Precio).order_by(desc(Precio.fechaAlta)).all()    
 
     def baja_precio_anterior(self):
-        self.session.query(Precio).filter_by(fechaBaja=None).update({Precio.fechaBaja:datetime.now().strftime("%d/%m/%Y %H:%M:%S")})
+        self.session.query(Precio).filter_by(fechaBaja=None).update({Precio.fechaBaja:datetime.now().strftime(Config.formatoFecha)})
+        self.session.commit()
+
+    def dev_precio_actual(self):
+        return self.session.query(Precio).filter_by(fechaBaja=None).first()
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings

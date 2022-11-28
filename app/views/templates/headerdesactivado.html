@@ -13,27 +13,27 @@
 <body> 
   <div class="container-fluid border">
     <header class="d-flex flex-wrap justify-content-center py-2">
-      <a href="/inicio"><img class="bi me-4" src="{{ url_for('static',filename='estacionamiento.svg') }}" alt="" width="40" height="40"></a>
+      <img class="bi me-4" src="{{ url_for('static',filename='estacionamiento.svg') }}" alt="" width="40" height="40">
       <ul class="nav nav-pills">
         {% if request.path=='/inicio' %}
-          <li class="nav-item"><a href="/inicio" class="nav-link active" aria-current="page">Inicio</a></li>
+          <li class="nav-item"><a href="/inicio" class="nav-link disabled active" aria-current="page">Inicio</a></li>
         {% else %}
-          <li class="nav-item"><a href="/inicio" class="nav-link" aria-current="page">Inicio</a></li>
+          <li class="nav-item"><a href="/inicio" class="nav-link disabled" aria-current="page">Inicio</a></li>
         {% endif %}
         {% if request.path=='/alta' %}
-          <li class="nav-item"><a href="/alta" class="nav-link active">Altas</a></li>
+          <li class="nav-item"><a href="/alta" class="nav-link disabled active">Altas</a></li>
         {% else %}
-          <li class="nav-item"><a href="/alta" class="nav-link">Altas</a></li>
+          <li class="nav-item"><a href="/alta" class="nav-link disabled">Altas</a></li>
         {% endif %}
         {% if request.path=='/baja' %}
-          <li class="nav-item"><a href="/baja" class="nav-link active">Bajas</a></li>
+          <li class="nav-item"><a href="/baja" class="nav-link disabled active">Bajas</a></li>
         {% else %}
-          <li class="nav-item"><a href="/baja" class="nav-link">Bajas</a></li>
+          <li class="nav-item"><a href="/baja" class="nav-link disabled">Bajas</a></li>
         {% endif %}
-        {% if request.path=='/listado' %}
-          <li class="nav-item"><a href="/listado" class="nav-link active">Lista</a></li>
+        {% if request.path=='/listado' or ('/baja/' in request.path)  %}
+          <li class="nav-item"><a href="/listado" class="nav-link disabled active">Lista</a></li>
         {% else %}
-          <li class="nav-item"><a href="/listado" class="nav-link">Lista</a></li>
+          <li class="nav-item"><a href="/listado" class="nav-link disabled">Lista</a></li>
         {% endif %}
           <li class="nav-item"> </li>
       </ul>
@@ -41,19 +41,19 @@
       </a>
       <ul class="nav nav-pills">
         {% if request.path=='/descuentos' %}
-          <li class="nav-item"><a href="/descuentos" class="nav-link active">Descuentos</a></li>
+          <li class="nav-item"><a href="/descuentos" class="nav-link disabled active">Descuentos</a></li>
         {% else %}
-          <li class="nav-item"><a href="/descuentos" class="nav-link">Descuentos</a></li>
+          <li class="nav-item"><a href="/descuentos" class="nav-link disabled">Descuentos</a></li>
         {% endif %}
         {% if request.path=='/precios' %}
-          <li class="nav-item"><a href="/precios" class="nav-link active">Precios</a></li>
+          <li class="nav-item"><a href="/precios" class="nav-link disabled active">Precios</a></li>
         {% else %}
-          <li class="nav-item"><a href="/precios" class="nav-link">Precios</a></li>
+          <li class="nav-item"><a href="/precios" class="nav-link disabled">Precios</a></li>
         {% endif %}
       </ul>
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"></a>
       <ul class="nav nav-pills">
-        <li class="nav-item"><a href="{{ url_for('rutasglobales.logout') }}" class="nav-link text-danger">Cerrar Sesion</a></li>
+        <li class="nav-item"><a href="{{ url_for('rutasglobales.logout') }}" class="nav-link disabled text-danger">Cerrar Sesion</a></li>
       </ul>
     </header>
   </div>

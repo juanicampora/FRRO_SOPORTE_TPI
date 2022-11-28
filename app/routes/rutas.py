@@ -103,40 +103,39 @@ def altaestadia():
         flash('Alta realizada a un cliente registrado anteriormente')
         return redirect(url_for('rutasglobales.alta'))
 
-@global_rutas.route('/baja')
+@global_rutas.route('/baja',methods=['GET','POST'])
+@global_rutas.route('/baja/<patente>',methods=['GET','POST'])
 @login_required
-def baja():
-    return render_template('baja.html')
-
-@global_rutas.route('/bajaenv', methods=['post'])
-@login_required
-def bajaestadia():
-    patentebaja=str(request.form.get('patente'))
-    resultado=controlador.bajaCliente(patentebaja)
-    if resultado=='Baja':
-        flash('Baja')
-        return redirect(url_for('rutasglobales.baja'))
-    elif resultado=='Inactivo':
-        flash('La patente ingresada corresponde a un cliente inactivo')
-        return redirect(url_for('rutasglobales.baja'))
+def baja(patente=None):
+    if request.method=='POST':
+        patentebaja=str(request.form.get('patente'))
+        respuesta=controlador.bajaCliente(patentebaja)
+        if respuesta['resultado']=='Baja':
+            flash('Baja')
+            return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='formulario') #redirect(url_for('rutasglobales.baja'))
+        elif respuesta['resultado']=='Inactivo':
+            flash('La patente ingresada corresponde a un cliente inactivo')
+            return redirect(url_for('rutasglobales.baja'))
+        else:
+            flash('La patente ingresada no corresponde a un cliente ')
+            return redirect(url_for('rutasglobales.baja'))
     else:
-        flash('La patente ingresada no corresponde a un cliente ')
-        return redirect(url_for('rutasglobales.baja'))
-
-@global_rutas.route('/bajaenv/<patente>')
-@login_required
-def bajaestadiadesdelista(patente):
-    patentebaja=patente
-    resultado=controlador.bajaCliente(patentebaja)
-    if resultado=='Baja':
-        flash('Baja Realizada')
-        return redirect(url_for('rutasglobales.listar'))
-    elif resultado=='Inactivo':
-        flash('La patente ingresada corresponde a un cliente inactivo')
-        return render_template('listado.html')
-    else:
-        flash('La patente ingresada no corresponde a un cliente ')
-        return render_template('listado.html')
+        if patente==None:
+            return render_template('baja.html')
+        else:
+            patentebaja=patente
+            respuesta=controlador.bajaCliente(patentebaja)
+            if respuesta['resultado']=='Baja':
+                flash('Baja Realizada')
+                resumen=respuesta['resumenEstadia']
+                print(resumen)
+                return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='listado')
+            elif respuesta['resultado']=='Inactivo':
+                flash('La patente ingresada corresponde a un cliente inactivo')
+                return render_template('listado.html')
+            else:
+                flash('La patente ingresada no corresponde a un cliente ')
+                return render_template('listado.html')
 
 @global_rutas.route('/listado')
 @login_required
@@ -206,7 +205,13 @@ def precios():
         print(precios)
         return render_template('precios.html',data_precios=precios)
 
-@global_rutas.route('/baja/montopagar',methods=['GET','POST'])
+@global_rutas.route('/baja/montopagar',methods=['GET','POST'])      #BORRAR  SI NO SIRVE
 @login_required
 def bajamontopagar():
-    return render_template('pruebamodal.html')
+    return render_template('bajaresultadomonto.html')
+
+
+@global_rutas.route('/prueba',methods=['GET','POST']) 
+@login_required
+def prueba():
+    return render_template('PRUEBA.html')

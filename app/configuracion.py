@@ -6,3 +6,4 @@ class Config:
     CARPETA_STATIC=os.path.abspath('./app/views/static')
     SECRET_KEY='unallavesecretaredificil'
     cantParkings=5
+    formatoFecha='%d/%m/%Y %H:%M:%S'

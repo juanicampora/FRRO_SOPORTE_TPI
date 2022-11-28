@@ -1,6 +1,9 @@
+from datetime import datetime,timedelta
 from app.db.basedatos import bbdd
 from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
 from os import path
+from app.controller.clases import ResumenEstadia
+from app.configuracion import Config
 
 class Controlador():
     def __init__(self,cantParkings):
@@ -45,6 +48,7 @@ class Controlador():
         nroParking=self.base.nro_parking_disponible()
         if viejoCliente is None:
             self.base.alta_cliente(nuevoCliente)
+            self.base.asignar_descuento_basico(nuevoCliente.patente)
             self.base.activar_estadia_cliente(nuevoCliente,nroParking)
             return 'Alta'
         elif viejoCliente.activo:
@@ -57,16 +61,42 @@ class Controlador():
             self.base.activar_estadia_cliente(nuevoCliente,nroParking)
             return 'Activado'
 
+    def calculaCosto(self,estadia:Estadia):
+        tiempoEstadia=( datetime.strptime(estadia.fechaHoraEgreso,Config.formatoFecha) - datetime.strptime(estadia.fechaHoraIngreso,Config.formatoFecha) ) / timedelta(minutes=1) 
+        precioActual=self.base.dev_precio_actual()
+        costo=precioActual.precioBase + tiempoEstadia*precioActual.precioMinuto
+        return {'costo':costo,'tiempoEstadia':round(tiempoEstadia,2),'precioBase':round(precioActual.precioBase,2)}
+
     def bajaCliente(self,patentebaja):
         patentebaja=patentebaja.replace(" ", "")
-        if self.devCliente(patentebaja) is None:
-            return 'Mal'
-        elif self.devCliente(patentebaja).activo:
-            nroparkingliberar=self.base.desactivar_estadia_cliente(patentebaja)
+        clienteBajar=self.devCliente(patentebaja)
+        if clienteBajar is None:
+            respuesta={'resultado':'Mal'}
+            return respuesta
+        elif clienteBajar.activo:
+            respuestaDesactivada=self.base.desactivar_estadia_cliente(patentebaja)
+            nroparkingliberar=respuestaDesactivada['nroParking']
+            estadiaDesactivada=respuestaDesactivada['estadiaDesactivada']
             self.base.liberar_parking(nroparkingliberar)
-            return 'Baja'
+            costoytiempo=self.calculaCosto(estadiaDesactivada)
+            costo=round(costoytiempo['costo'],2)
+            tiempoEstadia=costoytiempo['tiempoEstadia']
+            precioBase=costoytiempo['precioBase']
+            descuento=self.devDescuento(clienteBajar.idDescuento)
+            if descuento.vigente:
+                descuentoAplicado=descuento.valor
+                descripcionDescuento=descuento.descripcion
+                monto=round((costo-descuentoAplicado*costo/100),2)
+            else:
+                monto=costo
+                descuentoAplicado=0
+                descripcionDescuento='Descuento no vigente'
+            resumenEstadia=ResumenEstadia(patente=patentebaja,tiempo=tiempoEstadia,costo=costo,precioBase=precioBase,descuento=descuentoAplicado,descripcionDescuento=descripcionDescuento,monto=monto)
+            respuesta={'resultado':'Baja','resumenEstadia':resumenEstadia}
+            return respuesta
         else:
-            return 'Inactivo'
+            respuesta={'resultado':'Inactivo'}
+            return respuesta
 
     def listarEstadiasClientesActivos(self):
         return self.base.dev_estadias_activas()

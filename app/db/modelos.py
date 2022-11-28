@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash,generate_password_hash
 from flask_login import UserMixin
-
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
@@ -42,7 +40,7 @@ class Descuento(Base):
     __tablename__ = 'descuento'
     idDescuento   = Column(Integer, primary_key=True,   autoincrement=True)
     descripcion   = Column(String,  nullable=False)
-    valor         = Column(Float,   nullable=False) 
+    valor         = Column(Integer, nullable=False) 
     vigente       = Column(Boolean, nullable=False,     default=True)
 
     def __init__(self, idDescuento, descripcion, valor, vigente):
