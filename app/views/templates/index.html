@@ -1,32 +1,52 @@
 {% include 'header.html' %}
-<br>
-<br>
-<div class="d-grid justify-content-center gap-5">
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <strong>{{ message }}{{current_user.nombreApellido}}</strong>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>    
-      {% endfor %}
-    {% endif %}
-  {% endwith %} 
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <div class="d-grid justify-content-center bg-secondary gap-5 mb-3 mt-3">
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}{{current_user.nombreApellido}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>    
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %} 
+<div class="container-fluid border bg-secondary pt-5 pb-5 px-5">
+  <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    <div class="col">
+      <div class="card mb-4 rounded-3 shadow-sm">
+        <div class="card-header py-3">
+          <h4 class="my-0 fw-normal">Operaciones Básicas</h4>
+        </div>
+        <div class="card-body">
+          <a href="/alta"><button type="button" class="w-100 my-3 btn btn-lg btn-success">Alta/Entrada auto a parking</button></a>
+          <a href="/baja"><button type="button" class="w-100 my-3 btn btn-lg btn-danger">Baja/Salida auto de parking</button></a>
+          <a href="/listado"><button type="button" class="w-100 my-3 btn btn-lg btn-primary">Listado parking ocupado</button></a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card mb-4 rounded-3 shadow-sm">
+        <div class="card-header py-3">
+          <h4 class="my-0 fw-normal">Operaciones secundarias</h4>
+        </div>
+        <div class="card-body">
+          <a href="/descuentos"><button type="button" class="w-100 my-3 btn btn-lg btn-warning">Asignar descuento a cliente</button></a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card mb-4 rounded-3 shadow-sm">
+        <div class="card-header py-3">
+          <h4 class="my-0 fw-normal">Actualizaciones</h4>
+        </div>
+        <div class="card-body">
+          <a href="/descuentos"><button type="button" class="w-100 my-3 btn btn-lg btn-info">Actualización Descuentos</button></a>
+          <a href="/precios"><button type="button" class="w-100 my-3 btn btn-lg btn-info">Actualización Precios</button></a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<br>
-<br>
-<div class="d-grid justify-content-center gap-5">
-      <div class="text-center">  
-        <a href="/alta"><button class="btn btn-primary" type="button">ALTA AUTO</button></a>
-      </div>
-
-      <div class="text-center">  
-        <a href="/baja"><button class="btn btn-primary" type="button">BAJA AUTO</button></a>
-      </div>
-
-      <div class="text-center">  
-        <a href="/listado"><button class="btn btn-primary" type="button">LISTAR ESTACIONAMIENTOS</button></a>
-      </div>
-  </div>  
 
 {% include 'footer.html' %}
