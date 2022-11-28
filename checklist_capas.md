@@ -16,31 +16,31 @@ El siguiente checklist permite una fácil detección de malas prácticas y posib
 
 ### Presentación (Flask, Django, Kivy, etc.)
 
-- [ ] **NO** se utiliza ninguna función, objeto o clase de la capa de Datos.
-- [ ] Toda la lógica de los elementos interactivos (botones, menúes, etc.) se ejecuta mediante una función en la capa de negocio y **NO** dentro de elementos de interfaz.
+- [x] **NO** se utiliza ninguna función, objeto o clase de la capa de Datos.
+- [x] Toda la lógica de los elementos interactivos (botones, menúes, etc.) se ejecuta mediante una función en la capa de negocio y **NO** dentro de elementos de interfaz.
 - [ ] Esta capa funciona aunque se modifique cualquier archivo de la capa de datos.
-- [ ] Debe cumplir con los estándares de formato:
+- [x] Debe cumplir con los estándares de formato:
     - Si es un único archivo, debe llamarse **views.py**
     - Si son múltiples archivos, deben estar todos en una carpeta **views**
 
 ### Negocio
 
-- [ ] Ninguna función realiza llamadas a la base de datos directamente ni con ORM, todas deben llamar a una función de la capa de datos.
-- [ ] Ninguna función involucra elementos específicos de interfaz (Botones, HTML, etc.).
-- [ ] Esta capa seguiría funcionando si se cambiara el motor de base de datos.
+- [x] Ninguna función realiza llamadas a la base de datos directamente ni con ORM, todas deben llamar a una función de la capa de datos.
+- [x] Ninguna función involucra elementos específicos de interfaz (Botones, HTML, etc.).
+- [x] Esta capa seguiría funcionando si se cambiara el motor de base de datos.
 - [ ] Todas las funciones devuelven objetos de Negocio (Usuario, Reserva, Turno, etc.).
 - [ ] Se debe validar al menos una regla de negocio
-- [ ] Debe cumplir con los estándares de formato:
+- [x] Debe cumplir con los estándares de formato:
     - Si es un único archivo, debe llamarse **controller.py**
     - Si son múltiples archivos, deben estar todos en una carpeta **business** o **controller**
 
 ### Datos
 
 - [ ] Todas las funciones devuelven objetos de Negocio (Usuario, Reserva, Turno, etc.).
-- [ ] Todas las consultas a la base de datos se hacen desde esta capa.
-- [ ] Solo se acceden a las funciones de esta capa desde la Capa de Negocio
-- [ ] Se utiliza una base de datos (MySQL, Mongo, SQLite)
-- [ ] Se encuentra disponible el Modelo de Dominio / Diagrama Entidad Relación (Usar https://draw.io/) o similar
-- [ ] Debe cumplir con los estándares de formato:
+- [x] Todas las consultas a la base de datos se hacen desde esta capa.
+- [x] Solo se acceden a las funciones de esta capa desde la Capa de Negocio
+- [x] Se utiliza una base de datos (MySQL, Mongo, SQLite)
+- [x] Se encuentra disponible el Modelo de Dominio / Diagrama Entidad Relación (Usar https://draw.io/) o similar
+- [x] Debe cumplir con los estándares de formato:
     - Si es un único archivo, debe llamarse **db.py**
     - Si son múltiples archivos, deben estar todos en una carpeta **datos**
