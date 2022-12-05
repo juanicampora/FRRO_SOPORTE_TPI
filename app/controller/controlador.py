@@ -140,9 +140,9 @@ class Controlador():
 
     def asignarDescuento(self,patenteIngresada,idDescuentoIngresado:int):
         clienteIngresado=self.devCliente(patenteIngresada)
-        idDescuentoClienteIngresado=int(clienteIngresado.idDescuento)
         if  clienteIngresado==None:
             return 'No existe cliente con la patente ingresada'
+        idDescuentoClienteIngresado=int(clienteIngresado.idDescuento)
         if idDescuentoClienteIngresado==idDescuentoIngresado:
             return 'Ya tiene ese descuento asignado'
         else:
