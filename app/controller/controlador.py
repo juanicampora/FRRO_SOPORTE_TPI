@@ -42,6 +42,9 @@ class Controlador():
     
     def devDescuento(self,idIngresado):
         return self.base.dev_descuento(idIngresado)
+    
+    def devPrecioActual(self):
+        return self.base.dev_precio_actual()
 
     def altaCliente(self,nuevoCliente:Cliente):
         nuevoCliente.patente=nuevoCliente.patente.replace(" ", "")
@@ -64,7 +67,7 @@ class Controlador():
 
     def calculaCosto(self,estadia:Estadia):
         tiempoEstadia=( datetime.strptime(estadia.fechaHoraEgreso,Config.formatoFecha) - datetime.strptime(estadia.fechaHoraIngreso,Config.formatoFecha) ) / timedelta(minutes=1) 
-        precioActual=self.base.dev_precio_actual()
+        precioActual=self.devPrecioActual()
         costo=precioActual.precioBase + tiempoEstadia*precioActual.precioMinuto
         return {'costo':costo,'tiempoEstadia':round(tiempoEstadia,2),'precioBase':round(precioActual.precioBase,2)}
 
@@ -129,6 +132,14 @@ class Controlador():
             self.base.activar_descuento(idalta)
             return 'Alta'
 
+    def calculaNuevoPrecioPorcentaje(self,porcentajeBase,porcentajeMinuto):
+        precioBaseActual=self.devPrecioActual().precioBase
+        precioMinutoActual=self.devPrecioActual().precioMinuto
+        nuevoPrecioBase=round(precioBaseActual+precioBaseActual*porcentajeBase/100,2)
+        nuevoPrecioMinuto=round(precioMinutoActual+precioMinutoActual*porcentajeMinuto/100,2)
+        return (nuevoPrecioBase,nuevoPrecioMinuto)
+
+
     def nuevoPrecio(self,precioBase,precioMinuto):
         self.base.nuevo_precio(precioBase,precioMinuto)
 
@@ -136,7 +147,9 @@ class Controlador():
         self.base.baja_precio_anterior()
 
     def listarPrecios(self):
-        return self.base.dev_lista_precios()
+        precios=self.base.dev_lista_precios()
+        preciosOrdenados=sorted(precios, key=lambda precio: datetime.strptime(precio.fechaAlta,Config.formatoFecha), reverse=True)
+        return preciosOrdenados
 
     def asignarDescuento(self,patenteIngresada,idDescuentoIngresado:int):
         clienteIngresado=self.devCliente(patenteIngresada)

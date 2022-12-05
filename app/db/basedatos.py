@@ -123,7 +123,7 @@ class bbdd():
         self.session.commit()
 
     def dev_lista_precios(self):
-        return self.session.query(Precio).order_by(desc(Precio.fechaAlta)).all()    
+        return self.session.query(Precio).all()    #.order_by(desc(Precio.fechaAlta))
 
     def baja_precio_anterior(self):
         self.session.query(Precio).filter_by(fechaBaja=None).update({Precio.fechaBaja:datetime.now().strftime(Config.formatoFecha)})

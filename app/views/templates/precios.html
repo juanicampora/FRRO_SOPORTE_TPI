@@ -27,30 +27,61 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <h1>Nuevos Precios</h1>
+            <h1>Actualizar Precios por Valor ($)</h1>
             <table class="table table-borded table-responsive table-striped " id="table-list" >
                 <thead class="table-dark">
                     <tr>
-                        <td>Precio Base</td>
-                        <td>Precio Minuto</td>
+                        <td>$ Actualización Precio Base</td>
+                        <td>$ Actualización Precio Minuto</td>
                         <td>Acción</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="table-secondary">
-                        <form class="" action="/precios" method="post">                            
+                        <form class="" action="/precios" method="post" name="formularioValor">                            
                             <td  text-align:center>
                                 <div class="form-floating">
                                     <input class="form-control rounded-3" id="txtPrecioBase" name="txtPrecioBase" placeholder="Password">
-                                    <label for="txtPrecioBase">Precio Base</label>
+                                    <label for="txtPrecioBase">$ Actualización Precio Base</label>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-floating">
                                     <input class="form-control rounded-3" id="txtPrecioMinuto" name="txtPrecioMinuto" placeholder="Password">
-                                    <label for="txtPrecioMinuto">Precio Minuto</label>
+                                    <label for="txtPrecioMinuto">$ Actualización Precio Minuto</label>
                                 </div>
                             </td>
+                            <input type="hidden" name="tipoFormulario" id="tipoFormulario" value="valor">
+                            <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
+                        </form>                            
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Actualizar Precio por Porcentaje (%)</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>% Actualizacion Precio Base</td>
+                        <td>% Actualizacion Precio Minuto</td>
+                        <td>Acción</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-secondary">
+                        <form class="" action="/precios" method="post" name="formularioPorc">                            
+                            <td  text-align:center>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtPrecioBase" name="txtPorcPrecioBase" placeholder="Password">
+                                    <label for="txtPorcPrecioBase">%Actualizacion Precio Base</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtPrecioMinuto" name="txtPorcPrecioMinuto" placeholder="Password">
+                                    <label for="txtPorcPrecioMinuto">%Actualizacion Precio Minuto</label>
+                                </div>
+                            </td>
+                            <input type="hidden" name="tipoFormulario" id="tipoFormulario" value="porcentaje">
                             <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
                         </form>                            
                     </tr>
@@ -76,7 +107,7 @@
                                 <td>{{p.precioBase}}</td>                            
                                 <td>{{p.precioMinuto}}</td>                            
                                 <td>{{p.fechaAlta}}</td>       
-                                <td>{{p.fechaBaja}}</td>                     
+                                <td> </td>                     
                             </tr>
                         {% else %}
                             <tr class="table-danger">

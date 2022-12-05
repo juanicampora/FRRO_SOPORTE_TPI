@@ -188,16 +188,30 @@ def acciondescuentos(accion,idDescuento):
 @login_required
 def precios():
     if request.method=='POST':
-        precioBase= request.form['txtPrecioBase']
-        precioMinuto= request.form['txtPrecioMinuto']
-        if precioBase=='' or precioMinuto=='':
-            flash('Error, complete todos los campos')
-            return redirect(url_for('rutasglobales.precios'))
+        tipoFormulario= request.form['tipoFormulario']
+        if tipoFormulario=='valor':
+            precioBase= request.form['txtPrecioBase']
+            precioMinuto= request.form['txtPrecioMinuto']
+            if (precioBase=='' or precioMinuto==''):
+                flash('Error, complete todos los campos')
+                return redirect(url_for('rutasglobales.precios'))
+            else:
+                controlador.bajaPrecioAnterior()
+                controlador.nuevoPrecio(precioBase,precioMinuto)
+                flash('Registrado Correctamente')
+                return redirect(url_for('rutasglobales.precios'))
         else:
-            controlador.bajaPrecioAnterior()
-            controlador.nuevoPrecio(precioBase,precioMinuto)
-            flash('Registrado Correctamente')
-            return redirect(url_for('rutasglobales.precios'))
+            porcentajeBase= int(request.form['txtPorcPrecioBase'])
+            porcentajeMinuto= int(request.form['txtPorcPrecioMinuto'])
+            if (porcentajeBase=='' or porcentajeMinuto==''):
+                flash('Error, complete todos los campos')
+                return redirect(url_for('rutasglobales.precios'))
+            else:
+                nuevosPrecios=controlador.calculaNuevoPrecioPorcentaje(porcentajeBase,porcentajeMinuto)
+                controlador.bajaPrecioAnterior()
+                controlador.nuevoPrecio(nuevosPrecios[0],nuevosPrecios[1])
+                flash('Registrado Correctamente')
+                return redirect(url_for('rutasglobales.precios'))
     else:
         precios=controlador.listarPrecios()
         print(precios)
