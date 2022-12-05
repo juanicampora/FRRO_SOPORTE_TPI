@@ -238,3 +238,8 @@ def asignardescuento(idDescuento=None):
         else:
             descuento=controlador.devDescuento(idDescuento)
             return render_template('asignardescuento2.html',data_descuento=descuento)
+
+@global_rutas.route('/prueba',methods=['GET','POST'])
+@login_required
+def prueba():
+    return render_template('prueba.html')
