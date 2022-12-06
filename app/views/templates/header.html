@@ -21,36 +21,89 @@
         {% else %}
           <li class="nav-item"><a href="/inicio" class="nav-link" aria-current="page">Inicio</a></li>
         {% endif %}
-        {% if request.path=='/alta' %}
-          <li class="nav-item"><a href="/alta" class="nav-link active">Altas</a></li>
-        {% else %}
-          <li class="nav-item"><a href="/alta" class="nav-link">Altas</a></li>
-        {% endif %}
-        {% if request.path=='/baja' %}
-          <li class="nav-item"><a href="/baja" class="nav-link active">Bajas</a></li>
-        {% else %}
-          <li class="nav-item"><a href="/baja" class="nav-link">Bajas</a></li>
-        {% endif %}
-        {% if request.path=='/listado' %}
-          <li class="nav-item"><a href="/listado" class="nav-link active">Lista</a></li>
-        {% else %}
-          <li class="nav-item"><a href="/listado" class="nav-link">Lista</a></li>
-        {% endif %}
-          <li class="nav-item"> </li>
       </ul>
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
       </a>
       <ul class="nav nav-pills">
-        {% if request.path=='/asignardescuento' or '/asignardescuento/' in request.path %}
-          <li class="nav-item"><a href="/asignardescuento" class="nav-link active">Asignar Descuento</a></li>
-        {% else %}
-          <li class="nav-item"><a href="/asignardescuento" class="nav-link">Asignar Descuento</a></li>
-        {% endif %}
+        <li class="nav-item dropend">
+          {% if request.path=='/alta' or request.path=='/baja' or request.path=='/listado' or request.path=='/asignardescuento' %}
+          <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Cocheras Mensuales
+          </a>
+          {% else %}
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Cocheras Mensuales
+          </a>
+          {% endif %}
+          <ul class="dropdown-menu dropdown-menu-dark">
+            {% if request.path=='/alta' %}
+              <li><a href="/alta" class="dropdown-item active">Alta</a></li>
+            {% else %}
+              <li><a href="/alta" class="dropdown-item">Alta</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if request.path=='/baja' %}
+              <li><a href="/baja" class="dropdown-item active">Baja</a></li>
+            {% else %}
+              <li><a href="/baja" class="dropdown-item">Baja</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if request.path=='/listado' %}
+              <li><a href="/listado" class="dropdown-item active">Lista</a></li>
+            {% else %}
+              <li><a href="/listado" class="dropdown-item">Lista</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if request.path=='/asignardescuento' or '/asignardescuento/' in request.path %}
+              <li><a href="/asignardescuento" class="dropdown-item active">Descuento</a></li>
+            {% else %}
+              <li><a href="/asignardescuento" class="dropdown-item">Descuento</a></li>
+            {% endif %}
+          </ul>
       </ul>
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
       </a>
       <ul class="nav nav-pills">
-        <li class="nav-item dropdown">
+        <li class="nav-item dropend">
+          {% if request.path=='/alta' or request.path=='/baja' or request.path=='/listado' or request.path=='/asignardescuento' %}
+          <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Parking Diario
+          </a>
+          {% else %}
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Parking Diario
+          </a>
+          {% endif %}
+          <ul class="dropdown-menu dropdown-menu-dark">
+            {% if request.path=='/alta' %}
+              <li><a href="/alta" class="dropdown-item active">Alta</a></li>
+            {% else %}
+              <li><a href="/alta" class="dropdown-item">Alta</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if request.path=='/baja' %}
+              <li><a href="/baja" class="dropdown-item active">Baja</a></li>
+            {% else %}
+              <li><a href="/baja" class="dropdown-item">Baja</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if request.path=='/listado' %}
+              <li><a href="/listado" class="dropdown-item active">Lista</a></li>
+            {% else %}
+              <li><a href="/listado" class="dropdown-item">Lista</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            {% if request.path=='/asignardescuento' or '/asignardescuento/' in request.path %}
+              <li><a href="/asignardescuento" class="dropdown-item active">Descuento</a></li>
+            {% else %}
+              <li><a href="/asignardescuento" class="dropdown-item">Descuento</a></li>
+            {% endif %}
+          </ul>
+      </ul>
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+      </a>
+      <ul class="nav nav-pills">
+        <li class="nav-item dropend">
           {% if request.path=='/descuentos' or request.path=='/precios' %}
           <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Actualizaciones
@@ -60,17 +113,27 @@
             Actualizaciones
           </a>
           {% endif %}
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu dropdown-menu-dark">
             {% if request.path=='/descuentos' %}
-            <li><a class="dropdown-item active" href="/descuentos">Actualizar Descuentos</a></li>
+            <li><a class="dropdown-item active" href="/descuentos">Actualizar Descuentos Diarios</a></li>
             {% else %}
-            <li><a class="dropdown-item" href="/descuentos">Actualizar Descuentos</a></li>
+            <li><a class="dropdown-item" href="/descuentos">Actualizar Descuentos Diarios</a></li>
+            {% endif %}
+            {% if request.path=='/precios' %}
+            <li><a class="dropdown-item active" href="/precios" ">Actualizar Precios Diarios</a></li>
+            {% else %}
+            <li><a class="dropdown-item" href="/precios">Actualizar Precios Diarios</a></li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
-            {% if request.path=='/precios' %}
-            <li><a class="dropdown-item active" href="/precios" ">Actualizar Precios</a></li>
+            {% if request.path=='/descuentos' %}
+            <li><a class="dropdown-item active" href="/descuentos">Actualizar Descuentos Mensuales</a></li>
             {% else %}
-            <li><a class="dropdown-item" href="/precios">Actualizar Precios</a></li>
+            <li><a class="dropdown-item" href="/descuentos">Actualizar Descuentos Mensuales</a></li>
+            {% endif %}
+            {% if request.path=='/precios' %}
+            <li><a class="dropdown-item active" href="/precios" ">Actualizar Precios Mensuales</a></li>
+            {% else %}
+            <li><a class="dropdown-item" href="/precios">Actualizar Precios Mensuales</a></li>
             {% endif %}
           </ul>
         </li>
