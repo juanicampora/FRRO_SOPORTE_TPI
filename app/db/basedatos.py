@@ -189,12 +189,16 @@ class bbdd():
         else:
             mesesDeseados=int(mesesDeseados)
             fechaDeseada=(datetime.now()+relativedelta(months=mesesDeseados)).strftime(Config.formatoFecha)
-            nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada)
+            nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada,fechaVencimiento=None)
             self.session.add(nuevoAbono)
             self.session.commit()
     
     def desactivar_abono_cliente(self,documentoBaja):
         self.session.query(Abono).filter_by(documento=documentoBaja,fechaFin=None).update({Abono.fechaFin:datetime.now().strftime(Config.formatoFecha)})
+        self.session.commit()
+
+    def desactivar_cliente_mensual(self,documentoBaja):
+        self.session.query(ClienteMensual).filter_by(documento=documentoBaja).update({ClienteMensual.activo:False})
         self.session.commit()
 
     def __init__(self,cantParkings):

@@ -32,11 +32,10 @@
                       </tr>
                       {% endfor %}
                     </table>
-
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div> 
-                  {% elif message=="Alta realizada a un cliente registrado anteriormente, se actualizó su celular" %}
-                  <div class="alert alert-info alert-dismissible fade show" role="alert">
+                  {% elif message=="Alta realizada a un cliente registrado anteriormente, se actualizaron sus datos" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>{{ message }}</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div> 

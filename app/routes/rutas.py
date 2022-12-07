@@ -308,31 +308,32 @@ def bajamensual(documento=None):
     if request.method=='POST':
         documento=str(request.form.get('documento'))
         respuesta=controlador.bajaClienteMensual(documento)
-        if respuesta['resultado']=='Baja':
+        print(respuesta)
+        if respuesta=='Baja':
             flash('Baja')
-            return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='formulario') #redirect(url_for('rutasglobales.baja'))
-        elif respuesta['resultado']=='Inactivo':
+            return redirect(url_for('rutasglobales.bajamensual'))
+        elif respuesta=='Inactivo':
             flash('El documento ingresado corresponde a un cliente inactivo')
-            return redirect(url_for('rutasglobales.baja'))
+            return redirect(url_for('rutasglobales.bajamensual'))
         else:
             flash('El documento ingresado no corresponde a un cliente')
-            return redirect(url_for('rutasglobales.baja'))
+            return redirect(url_for('rutasglobales.bajamensual'))
     else:
         if documento==None:
             return render_template('bajamensual.html')
         else:
             documentobaja=documento
             respuesta=controlador.bajaClienteMensual(documentobaja)
-            if respuesta['resultado']=='Baja':
+            if respuesta=='Baja':
                 flash('Baja Realizada')
                 resumen=respuesta['resumenEstadia']
                 print(resumen)
-                return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='listado')
-            elif respuesta['resultado']=='Inactivo':
+                return render_template('bajaresultadomonto.html',datos=respuesta)
+            elif respuesta=='Inactivo':
                 flash('El documento ingresado corresponde a un cliente inactivo')
                 return render_template('listadomensual.html')
             else:
-                flash('El documento ingresado no corresponde a un cliente ')
+                flash('El documento ingresado no corresponde a un cliente')
                 return render_template('listadomensual.html')
 
 @global_rutas.route('/prueba',methods=['GET','POST'])

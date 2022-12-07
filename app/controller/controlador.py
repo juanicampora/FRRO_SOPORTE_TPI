@@ -222,6 +222,7 @@ class Controlador():
         elif clienteBajar.activo:
             self.base.desactivar_abono_cliente(documentobaja)
             self.base.liberar_parking_mensual(clienteBajar.nroParking)
+            self.base.desactivar_cliente_mensual(clienteBajar.documento)
             return 'Baja'
         else:
             return 'Inactivo'
