@@ -1,0 +1,86 @@
+{% include 'header.html' %}
+
+<div class="modal modal-signin position-static d-block bg-secondary py-5" tabindex="-1" role="dialog" id="modalSignin">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+          <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+          <h1 class="fw-bold mb-0 fs-2">Alta Auto en Parking</h1>
+        </div>
+         
+        <div class="modal-body p-5 pt-0">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+                {% if message=="Alta" %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Alta realizada</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>   
+                {% elif message=="Los Parking Disponibles son:" %}
+                  <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong> <br>
+                    <table class="table table-sm">
+                      <tr>
+                        <th>Numero</th>
+                        <th>Piso</th>
+                      </tr>
+                      {% for p in pDisp %}
+                      <tr>
+                        <td> {{ p[1] }} </td>
+                        <td> {{ p[0] }} </td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div> 
+                  {% elif message=="Alta realizada a un cliente registrado anteriormente, se actualizó su celular" %}
+                  <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div> 
+                {% else %}
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div> 
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          <form class="" action="/altamensual" method="post">
+
+            <div class="form-floating mb-5">
+              <input class="form-control rounded-3" id="nroParking" name="nroParking" placeholder="2">
+              <label for="nroParking">Nro Parking a Asignar</label>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input class="form-control rounded-3" id="documento" name="documento" placeholder="12345678">
+              <label for="documento">Documento (DNI/CUIT/CUIL)</label>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input class="form-control rounded-3" id="nombre" name="nombre" placeholder="Juan Perez">
+              <label for="nombre">Nombre</label>
+            </div>
+
+            <div class="form-floating mb-5">
+              <input class="form-control rounded-3" id="celular" name="celular" placeholder="3411111111">
+              <label for="celular">Celular</label>
+            </div>
+
+            <div class="form-floating mt-2 mb-5">
+              <input class="form-control rounded-3" id="mesesDeseados" name="mesesDeseados" placeholder="2">
+              <label for="mesesDeseados">Meses que desea ocupar la cochera (opcional)</label>
+            </div>
+
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'footer.html' %}

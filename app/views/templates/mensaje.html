@@ -6,24 +6,24 @@
 {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
-                {% if message=="No hay Parking Disponible" %}
-                        <div class="alert alert-danger" role="alert">
-                            <h4 class="alert-heading">¡Atención!</h4>
-                            <p>{{ message }}</p>
-                        </div>
-                        {% elif message=="Alta" %}
-                        <div class="container">
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <p>Alta realizada</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
-                        {% else %}
+                {% if message=="No hay Parking Disponible" or message=="Se alcanzó el límite de Cocheras Mensuales" %}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">¡Atención!</h4>
+                        <p>{{ message }}</p>
+                    </div>
+                {% elif message=="Alta" %}
+                    <div class="container">
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <p>{{ message }}</p>
+                            <p>Alta realizada</p>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-                        {% endif %}                 
+                    </div>
+                {% else %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <p>{{ message }}</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}                 
             {% endfor %}
         {% endif %}
 {% endwith %} 

@@ -30,8 +30,11 @@ class Controlador():
     def altaTrabajador(self,nuevoTrabajador:Trabajador)->bool:
         return self.base.alta_trabajador(nuevoTrabajador)
 
+    def devOcupadoParking(self,nroParking)->bool:
+        return self.base.dev_ocupado_parking(nroParking)
+
     def verifParkingDisponible(self)->bool:
-        if self.base.nro_parking_disponible() is None:
+        if self.base.dev_nro_parking_disponible() is None:
             return False
         else:
             return True 
@@ -46,10 +49,20 @@ class Controlador():
     def devPrecioActual(self):
         return self.base.dev_precio_actual()
 
+    def devParkingDisponible(self):
+        return self.base.dev_parking_disponible()
+
+    def devParkingsDisponibles(self):
+        parkingDisponible=self.base.dev_parkings_disponibles()
+        tuplaParkingDisponible=[]
+        for parking in parkingDisponible:
+            tuplaParkingDisponible.append((parking.piso,parking.nroParking))
+        return tuplaParkingDisponible
+
     def altaCliente(self,nuevoCliente:Cliente):
         nuevoCliente.patente=nuevoCliente.patente.replace(" ", "")
         viejoCliente=self.devCliente(nuevoCliente.patente)
-        nroParking=self.base.nro_parking_disponible()
+        nroParking=self.base.dev_nro_parking_disponible()
         if viejoCliente is None:
             self.base.alta_cliente(nuevoCliente)
             self.base.asignar_descuento_basico(nuevoCliente.patente)
@@ -139,7 +152,6 @@ class Controlador():
         nuevoPrecioMinuto=round(precioMinutoActual+precioMinutoActual*porcentajeMinuto/100,2)
         return (nuevoPrecioBase,nuevoPrecioMinuto)
 
-
     def nuevoPrecio(self,precioBase,precioMinuto):
         self.base.nuevo_precio(precioBase,precioMinuto)
 
@@ -163,3 +175,39 @@ class Controlador():
             self.base.asignar_descuento(clienteIngresado.patente,idDescuentoIngresado)
             return 'Asignado'
              
+    def verifCantMensuales(self):
+        cantMensuales=len(self.base.dev_parkings_mensuales_ocupados())
+        return (cantMensuales<Config.maximoParkingsMensuales)
+
+    def validarParkingIngresado(self,nroParkingIngresado):
+        if nroParkingIngresado=='':
+            return self.base.dev_nro_parking_disponible()
+        nroParkingIngresado=int(nroParkingIngresado)
+        if self.devOcupadoParking(nroParkingIngresado):
+            return 'Ocupado'
+        else:
+            return nroParkingIngresado
+
+    def validarClienteMensual(self,documentoIngresado):
+        resultado=self.base.dev_cliente_mensual(documentoIngresado)
+        if resultado is None:
+            return 'Nuevo'
+        elif resultado.activo:
+            return 'Activo'
+        else:
+            return 'Registrado'
+
+    def altaClienteMensual(self,nuevoClienteMensual,mesesDeseados): 
+        validacionClienteMensual=self.validarClienteMensual(nuevoClienteMensual.documento)
+        if validacionClienteMensual=='Activo':
+            return 'Activo'
+        elif validacionClienteMensual=='Registrado':
+            self.base.activar_cliente_mensual(nuevoClienteMensual)
+            self.base.ocupar_parking_mensual(nroParkingOcupar=nuevoClienteMensual.nroParking)
+            self.base.nuevo_abono(nuevoClienteMensual.documento,mesesDeseados)
+            return 'Actualizado'
+        else:
+            self.base.alta_cliente_mensual(nuevoClienteMensual)
+            self.base.ocupar_parking_mensual(nroParkingOcupar=nuevoClienteMensual.nroParking)
+            self.base.nuevo_abono(nuevoClienteMensual.documento,mesesDeseados)
+            return 'Alta'

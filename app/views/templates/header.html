@@ -26,7 +26,7 @@
       </a>
       <ul class="nav nav-pills">
         <li class="nav-item dropend">
-          {% if request.path=='/alta' or request.path=='/baja' or request.path=='/listado' or request.path=='/asignardescuento' %}
+          {% if request.path=='/altamensual' or request.path=='/bajamensual' or request.path=='/listado' or request.path=='/asignardescuento' %}
           <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Cocheras Mensuales
           </a>
@@ -37,9 +37,9 @@
           {% endif %}
           <ul class="dropdown-menu dropdown-menu-dark">
             {% if request.path=='/alta' %}
-              <li><a href="/alta" class="dropdown-item active">Alta</a></li>
+              <li><a href="/altamensual" class="dropdown-item active">Alta</a></li>
             {% else %}
-              <li><a href="/alta" class="dropdown-item">Alta</a></li>
+              <li><a href="/altamensual" class="dropdown-item">Alta</a></li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
             {% if request.path=='/baja' %}

@@ -66,6 +66,7 @@ class Parking(Base):
     nroParking    = Column(Integer, primary_key=True)
     piso          = Column(Integer, nullable=False)
     ocupado       = Column(Boolean, nullable=False, default=False)
+    mensual       = Column(Boolean, nullable=False, default=False)
 
     def __init__(self, nroParking, piso, ocupado):
         self.nroParking=nroParking
@@ -73,8 +74,8 @@ class Parking(Base):
         self.ocupado=ocupado
 
 class Estadia(Base):
-    __tablename__ = 'estadia'
-    patente = Column(String, ForeignKey('cliente.patente'), primary_key=True)
+    __tablename__    = 'estadia'
+    patente          = Column(String, ForeignKey('cliente.patente'), primary_key=True)
     fechaHoraIngreso = Column(String, primary_key=True)
     fechaHoraEgreso  = Column(String, nullable=True)
     nroParking       = Column(Integer, ForeignKey('parking.nroParking'), nullable=False)
@@ -84,3 +85,31 @@ class Estadia(Base):
         self.fechaHoraIngreso=fechaHoraIngreso
         self.fechaHoraEgreso=fechaHoraEgreso
         self.nroParking=nroParking
+
+class ClienteMensual(Base):
+    __tablename__ = 'clientemensual'
+    documento     = Column(String,  primary_key=True)
+    nombre        = Column(String,  nullable=False)
+    celular       = Column(Integer, nullable=True)
+    activo        = Column(Boolean, nullable=False)
+    nroParking    = Column(Integer, ForeignKey('parking.nroParking'), nullable=False)
+
+    def __init__(self, documento,nombre,celular,activo,nroParking):
+        self.documento=documento
+        self.nombre=nombre
+        self.celular=celular
+        self.activo=activo
+        self.nroParking=nroParking
+
+class Abono(Base):
+    __tablename__    = 'abono'
+    documento        = Column(String, ForeignKey('clientemensual.documento'), primary_key=True)
+    fechaInicio      = Column(String, primary_key=True)
+    fechaDeseada     = Column(String, nullable=True)
+    fechaVencimiento = Column(String, nullable=True)
+
+    def __init__(self, documento, fechaInicio, fechaDeseada, fechaVencimiento):
+        self.documento=documento
+        self.fechaInicio=fechaInicio
+        self.fechaDeseada=fechaDeseada
+        self.fechaVencimiento=fechaVencimiento

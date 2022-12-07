@@ -1,7 +1,8 @@
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from sqlalchemy import create_engine,desc
 from sqlalchemy.orm import sessionmaker
-from .modelos import Base,Precio,Descuento,Cliente,Trabajador,Parking,Estadia
+from .modelos import Base,Precio,Descuento,Cliente,Trabajador,Parking,Estadia,ClienteMensual,Abono
 from app.configuracion import Config
 
 
@@ -48,7 +49,7 @@ class bbdd():
     def dev_descuento(self,idBuscado)-> Descuento:
         return self.session.query(Descuento).filter_by(idDescuento=idBuscado).first()   
 
-    def alta_cliente(self,nuevoCliente:Cliente) -> bool:
+    def alta_cliente(self,nuevoCliente:Cliente):
         self.session.add(nuevoCliente)
         self.session.commit()
     
@@ -60,12 +61,23 @@ class bbdd():
         self.session.query(Cliente).filter_by(patente=nuevoCliente.patente).update({Cliente.celular:nuevoCliente.celular})
         self.session.commit()
 
-    def nro_parking_disponible(self):
+    def dev_ocupado_parking(self,nroParking)-> Parking:
+        return self.session.query(Parking).filter_by(nroParking=nroParking).first().ocupado
+
+    def dev_nro_parking_disponible(self):
         parkingDisponible=self.session.query(Parking).filter_by(ocupado=False).first()
         if parkingDisponible is None:
             return None
         else:
             return parkingDisponible.nroParking
+
+    def ocupar_parking(self,nroParkingOcupar):
+        self.session.query(Parking).filter_by(nroParking=nroParkingOcupar).update({Parking.ocupado:True})
+        self.session.commit()
+
+    def ocupar_parking_mensual(self,nroParkingOcupar):
+        self.session.query(Parking).filter_by(nroParking=nroParkingOcupar).update({Parking.ocupado:True,Parking.mensual:True})
+        self.session.commit()
 
     def activar_estadia_cliente(self,nuevoCliente:Cliente,nroParkingAsignar:int):
         self.session.query(Cliente).filter_by(patente=nuevoCliente.patente).update({Cliente.activo:True})
@@ -123,7 +135,7 @@ class bbdd():
         self.session.commit()
 
     def dev_lista_precios(self):
-        return self.session.query(Precio).all()    #.order_by(desc(Precio.fechaAlta))
+        return self.session.query(Precio).all()
 
     def baja_precio_anterior(self):
         self.session.query(Precio).filter_by(fechaBaja=None).update({Precio.fechaBaja:datetime.now().strftime(Config.formatoFecha)})
@@ -135,6 +147,36 @@ class bbdd():
     def asignar_descuento(self,patenteCliente,idDescuentoIngresado):
         self.session.query(Cliente).filter_by(patente=patenteCliente).update({Cliente.idDescuento:idDescuentoIngresado})
         self.session.commit()
+
+    def dev_parkings_disponibles(self):
+        return self.session.query(Parking).filter_by(ocupado=False,mensual=False).all()
+
+    def dev_parkings_mensuales_ocupados(self):
+        return self.session.query(Parking).filter_by(ocupado=False,mensual=True).all()
+
+    def dev_cliente_mensual(self,documentoClienteMensual):
+        return self.session.query(ClienteMensual).filter_by(documento=documentoClienteMensual).first()
+
+    def alta_cliente_mensual(self,nuevoClienteMensual:ClienteMensual):
+        self.session.add(nuevoClienteMensual)
+        self.session.commit()
+
+    def activar_cliente_mensual(self,antiguoClienteMensual:ClienteMensual):
+        self.session.query(ClienteMensual).filter_by(documento=antiguoClienteMensual.documento).update(
+            {ClienteMensual.nombre:antiguoClienteMensual.nombre
+            ,ClienteMensual.celular:antiguoClienteMensual.celular
+            ,ClienteMensual.activo:True})
+        self.session.commit()
+
+    def nuevo_abono(self,documentoClienteMensual,mesesDeseados):
+        if mesesDeseados=='':
+            fechaDeseada='No especificada'
+        else:
+            mesesDeseados=int(mesesDeseados)
+            fechaDeseada=(datetime.now()+relativedelta(months=mesesDeseados)).strftime(Config.formatoFecha)
+            nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada)
+            self.session.add(nuevoAbono)
+            self.session.commit()
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings

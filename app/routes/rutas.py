@@ -2,7 +2,7 @@ from flask import Blueprint,render_template, request, redirect,url_for ,session,
 from flask_login import login_user,logout_user,login_required
 
 from app.configuracion import Config
-from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
+from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia,ClienteMensual,Abono
 from app.controller.controlador import Controlador
 
 
@@ -259,32 +259,44 @@ def asignardescuento(idDescuento=None):
 @login_required
 def altamensual():
     if request.method=='POST':
-        nuevapatente=str(request.form.get('patente'))
-        celularingresado=request.form.get('celular')
-        if nuevapatente=='':
-            flash('Ingrese una patente')
-            return redirect(url_for('rutasglobales.alta'))
-        if celularingresado=='':
-            nuevocelular=None
-        else:
-            nuevocelular=int(celularingresado)
-        nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular,activo=True)
-        resultado=controlador.altaCliente(nuevocliente)
+        documento=request.form.get('documento')
+        nombre=request.form.get('nombre')
+        celular=request.form.get('celular')
+        nroParking=request.form.get('nroParking')
+        mesesDeseados=request.form.get('mesesDeseados')
+        if documento=='' or nombre=='' or celular=='':
+            flash('Complete todos los campos')
+            return redirect(url_for('rutasglobales.altamensual'))
+        documento=str(documento)
+        nombre=str(nombre)
+        celular=int(celular)
+        nroParking=controlador.validarParkingIngresado(nroParking)
+        if nroParking=='Ocupado':
+            flash('El numero de parking ingresado corresponde a uno Ocupado')
+            return redirect(url_for('rutasglobales.altamensual'))
+        nuevoClienteMensual=ClienteMensual(documento=documento,nombre=nombre,celular=celular,activo=True,nroParking=nroParking)
+        resultado=controlador.altaClienteMensual(nuevoClienteMensual,mesesDeseados)
         if resultado=='Alta':
             flash('Alta')
-            return redirect(url_for('rutasglobales.alta'))
-        elif resultado=='Activo':
-            flash('El cliente previamente fue dado de Alta')
-            return redirect(url_for('rutasglobales.alta'))
+            return redirect(url_for('rutasglobales.altamensual'))
         elif resultado=='Actualizado':
-            flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
-            return redirect(url_for('rutasglobales.alta'))
+            flash('Alta realizada a un cliente registrado anteriormente, se actualizaron sus datos')
+            return redirect(url_for('rutasglobales.altamensual'))
+        elif resultado=='Activo':
+            flash('El documento corresponde a un cliente Activo')
+            return redirect(url_for('rutasglobales.altamensual'))
         else:
-            flash('Alta realizada a un cliente registrado anteriormente')
-            return redirect(url_for('rutasglobales.alta'))
+            flash(resultado)
+            return redirect(url_for('rutasglobales.altamensual'))
     else:
         if controlador.verifParkingDisponible():
-            return render_template('alta.html')
+            if controlador.verifCantMensuales():
+                parkingDisponible=controlador.devParkingsDisponibles()
+                flash('Los Parking Disponibles son:')
+                return render_template('altamensual.html',pDisp=parkingDisponible)
+            else: 
+                flash('Se alcanzó el límite de Cocheras Mensuales')
+                return render_template('mensaje.html')
         else:
             flash('No hay Parking Disponible')
             return render_template('mensaje.html')
@@ -292,4 +304,4 @@ def altamensual():
 @global_rutas.route('/prueba',methods=['GET','POST'])
 @login_required
 def prueba():
-    return render_template('prueba.html')
+    return render_template('altamensual.html')
