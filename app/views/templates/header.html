@@ -24,7 +24,7 @@
       </a>
       <ul class="nav nav-pills">
         <li class="nav-item dropend">
-          {% if request.path=='/altamensual' or request.path=='/bajamensual' or request.path=='/listado' or request.path=='/asignardescuento' %}
+          {% if request.path=='/altamensual' or request.path=='/bajamensual' or request.path=='/listadomensual' or request.path=='/asignardescuentomensual' or ('/asignardescuentomensual/' in request.path)%}
           <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Cocheras Mensuales
           </a>
@@ -52,10 +52,10 @@
               <li><a href="/listadomensual" class="dropdown-item">Lista</a></li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
-            {% if request.path=='/asignardescuento' or '/asignardescuento/' in request.path %}
-              <li><a href="/asignardescuento" class="dropdown-item active">Descuento</a></li>
+            {% if request.path=='/asignardescuentomensual' or ('/asignardescuentomensual/' in request.path) %}
+              <li><a href="/asignardescuentomensual" class="dropdown-item active">Descuento</a></li>
             {% else %}
-              <li><a href="/asignardescuento" class="dropdown-item">Descuento</a></li>
+              <li><a href="/asignardescuentomensual" class="dropdown-item">Descuento</a></li>
             {% endif %}
           </ul>
       </ul>
@@ -63,7 +63,7 @@
       </a>
       <ul class="nav nav-pills">
         <li class="nav-item dropend">
-          {% if request.path=='/alta' or request.path=='/baja' or request.path=='/listado' or request.path=='/asignardescuento' %}
+          {% if request.path=='/alta' or request.path=='/baja' or request.path=='/listado' or request.path=='/asignardescuento' or ('/asignardescuento/' in request.path) %}
           <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Parking Diario
           </a>

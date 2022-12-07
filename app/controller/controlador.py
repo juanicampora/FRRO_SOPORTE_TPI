@@ -34,7 +34,7 @@ class Controlador():
         return self.base.dev_ocupado_parking(nroParking)
 
     def verifParkingDisponible(self)->bool:
-        if self.base.dev_nro_parking_disponible() is None:
+        if self.devParkingDisponible() is None:
             return False
         else:
             return True 
@@ -53,7 +53,7 @@ class Controlador():
         return self.base.dev_precio_actual()
 
     def devParkingDisponible(self):
-        return self.base.dev_parking_disponible()
+        return self.base.dev_nro_parking_disponible()
 
     def devParkingsDisponibles(self):
         parkingDisponible=self.base.dev_parkings_disponibles()
@@ -65,7 +65,7 @@ class Controlador():
     def altaCliente(self,nuevoCliente:Cliente):
         nuevoCliente.patente=nuevoCliente.patente.replace(" ", "")
         viejoCliente=self.devCliente(nuevoCliente.patente)
-        nroParking=self.base.dev_nro_parking_disponible()
+        nroParking=self.devParkingDisponible()
         if viejoCliente is None:
             self.base.alta_cliente(nuevoCliente)
             self.base.asignar_descuento_basico(nuevoCliente.patente)
@@ -126,6 +126,9 @@ class Controlador():
 
     def listarDescuentosVigentes(self):
         return self.base.dev_lista_descuentos_vigentes()
+    
+    def listarDescuentosMensualesVigentes(self):
+        return self.base.dev_lista_descuentos_mensuales_vigentes()
 
     def nuevoDescuento(self,descripcionIngresada,valorIngresado):
         self.base.nuevo_descuento(descripcionIngresada,valorIngresado)
@@ -174,7 +177,6 @@ class Controlador():
         if idDescuentoClienteIngresado==idDescuentoIngresado:
             return 'Ya tiene ese descuento asignado'
         else:
-            print('ASIGNADOOOO')
             self.base.asignar_descuento(clienteIngresado.patente,idDescuentoIngresado)
             return 'Asignado'
              
@@ -184,7 +186,7 @@ class Controlador():
 
     def validarParkingIngresado(self,nroParkingIngresado):
         if nroParkingIngresado=='':
-            return self.base.dev_nro_parking_disponible()
+            return self.devParkingDisponible()
         nroParkingIngresado=int(nroParkingIngresado)
         if self.devOcupadoParking(nroParkingIngresado):
             return 'Ocupado'
@@ -229,3 +231,14 @@ class Controlador():
 
     def listarClientesMensualesActivos(self):
         return self.base.dev_lista_clientes_mensuales_activos()
+
+    def asignarDescuentoMensual(self,documentoIngresado,idDescuentoIngresado:int):
+        clienteIngresado=self.devClienteMensual(documentoIngresado)
+        if  clienteIngresado==None:
+            return 'No existe cliente con el documento ingresado'
+        idDescuentoClienteIngresado=int(clienteIngresado.idDescuento)
+        if idDescuentoClienteIngresado==idDescuentoIngresado:
+            return 'Ya tiene ese descuento asignado'
+        else:
+            self.base.asignar_descuento_mensual(clienteIngresado.documento,idDescuentoIngresado)
+            return 'Asignado'

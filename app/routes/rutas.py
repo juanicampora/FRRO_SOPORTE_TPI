@@ -126,7 +126,6 @@ def baja(patente=None):
             if respuesta['resultado']=='Baja':
                 flash('Baja Realizada')
                 resumen=respuesta['resumenEstadia']
-                print(resumen)
                 return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='listado')
             elif respuesta['resultado']=='Inactivo':
                 flash('La patente ingresada corresponde a un cliente inactivo')
@@ -214,7 +213,6 @@ def precios():
                 return redirect(url_for('rutasglobales.precios'))
     else:
         precios=controlador.listarPrecios()
-        print(precios)
         return render_template('precios.html',data_precios=precios)
 
 @global_rutas.route('/baja/montopagar',methods=['GET','POST'])      #BORRAR  SI NO SIRVE
@@ -308,7 +306,6 @@ def bajamensual(documento=None):
     if request.method=='POST':
         documento=str(request.form.get('documento'))
         respuesta=controlador.bajaClienteMensual(documento)
-        print(respuesta)
         if respuesta=='Baja':
             flash('Baja')
             return redirect(url_for('rutasglobales.bajamensual'))
@@ -340,7 +337,33 @@ def listadomensual():
     lista=controlador.listarClientesMensualesActivos()
     return render_template('listadomensual.html',data_lista=lista)
 
-@global_rutas.route('/prueba',methods=['GET','POST'])
+@global_rutas.route('/asignardescuentomensual/<idDescuento>',methods=['GET','POST']) 
+@global_rutas.route('/asignardescuentomensual',methods=['GET','POST']) 
 @login_required
-def prueba():
-    return render_template('altamensual.html')
+def asignardescuentomensual(idDescuento=None):
+    if request.method=='POST':
+        documento= request.form['documento']
+        if documento=='':
+            flash('Error, complete todos los campos')
+            return redirect(f'/asignardescuento/{idDescuento}')
+        elif idDescuento=='Nada':
+            flash('Error, seleccione un descuento')
+            return redirect(url_for('rutasglobales.asignardescuento'))
+        else:
+            resultado=controlador.asignarDescuentoMensual(documento,int(idDescuento))
+            if resultado=='Asignado':
+                flash('Descuento Asignado')
+                return redirect(url_for('rutasglobales.asignardescuentomensual'))
+            elif resultado=='Ya tiene ese descuento asignado':
+                flash(resultado)
+                return redirect(url_for('rutasglobales.asignardescuentomensual'))
+            else:
+                flash(resultado)
+                return redirect(f'/asignardescuentomensual/{idDescuento}')
+    else:
+        if idDescuento==None:
+            descuentos=controlador.listarDescuentosMensualesVigentes()
+            return render_template('asignardescuentomensual1.html',data_descuentos=descuentos)
+        else:
+            descuento=controlador.devDescuento(idDescuento)
+            return render_template('asignardescuentomensual2.html',data_descuento=descuento)

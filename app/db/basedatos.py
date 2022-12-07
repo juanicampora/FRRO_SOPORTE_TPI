@@ -8,10 +8,12 @@ from app.configuracion import Config
 
 class bbdd():
     def inicializar_tablas(self):
-        nuevo_descuento=Descuento(1,'Sin descuento',0,True)
+        nuevo_descuento=Descuento(1,'Sin descuento',0,False,True)
+        nuevo_descuento_mensual=Descuento(2,'Sin descuento',0,True,True)
         nuevo_trabajador=Trabajador('admin','123','Administrador')
         nuevo_precio=Precio(None,100,10,datetime.now().strftime(Config.formatoFecha),None)
         self.session.add(nuevo_descuento)
+        self.session.add(nuevo_descuento_mensual)
         self.session.add(nuevo_trabajador)
         self.session.add(nuevo_precio)
         self.session.commit()
@@ -128,7 +130,10 @@ class bbdd():
         return self.session.query(Descuento).all()
 
     def dev_lista_descuentos_vigentes(self):
-        return self.session.query(Descuento).filter_by(vigente=True).all()   
+        return self.session.query(Descuento).filter_by(vigente=True,mensual=False).all()   
+    
+    def dev_lista_descuentos_mensuales_vigentes(self):
+        return self.session.query(Descuento).filter_by(vigente=True,mensual=True).all()   
 
     def nuevo_descuento(self,descripcionIngresada,valorIngresado):
         nuevoDescuento=Descuento(idDescuento=None,descripcion=descripcionIngresada,valor=valorIngresado,vigente=None)
@@ -214,6 +219,10 @@ class bbdd():
                 """
         lista=self.session.execute(query).all()
         return lista
+
+    def asignar_descuento_mensual(self,documentoCliente,idDescuentoIngresado):
+        self.session.query(ClienteMensual).filter_by(documento=documentoCliente).update({ClienteMensual.idDescuento:idDescuentoIngresado})
+        self.session.commit()
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings

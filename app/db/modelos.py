@@ -40,13 +40,15 @@ class Descuento(Base):
     __tablename__ = 'descuento'
     idDescuento   = Column(Integer, primary_key=True,   autoincrement=True)
     descripcion   = Column(String,  nullable=False)
-    valor         = Column(Integer, nullable=False) 
+    valor         = Column(Integer, nullable=False)
+    mensual       = Column(Boolean, nullable=False,     default=False) 
     vigente       = Column(Boolean, nullable=False,     default=True)
 
-    def __init__(self, idDescuento, descripcion, valor, vigente):
+    def __init__(self, idDescuento, descripcion, valor, mensual, vigente):
         self.idDescuento=idDescuento
         self.descripcion=descripcion
         self.valor=valor
+        self.mensual=mensual
         self.vigente=vigente
 
 class Cliente(Base):

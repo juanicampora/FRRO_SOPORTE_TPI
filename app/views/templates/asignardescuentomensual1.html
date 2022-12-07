@@ -1,0 +1,56 @@
+{% include 'header.html' %}
+    <style>
+        table,
+        table td {
+        border: 1px solid #cccccc;
+        }
+        td {
+        text-align: center;
+        vertical-align: middle;
+        }
+    </style>
+    <br>
+    <br>
+    <div class="container">
+        <div class="table-content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message=="Ya tiene ese descuento asignado" %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {% else %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>   
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <h1>Seleccione un Descuento del listado</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Vigencia</td>
+                        <td>idDescuento</td>
+                        <td>Descripción</td>
+                        <td>Valor</td>                        
+                        <td>Acción</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for d in data_descuentos %}
+                            <tr class="table-success">
+                                <td>Vigente</td>
+                                <td>{{d.idDescuento}}</td>                            
+                                <td>{{d.descripcion}}</td>                            
+                                <td>{{d.valor}}</td>                            
+                                <td><a href="/asignardescuentomensual/{{d.idDescuento}}" class="btn btn-success" role="button">Seleccionar Descuento</a></td>                           
+                            </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% include 'footer.html' %}
