@@ -11,8 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body> 
-  <div class="container-fluid border">
+<body class="bg-secondary"> 
+  <div class="container-fluid border bg-light">
     <header class="d-flex flex-wrap justify-content-center py-2">
       <a href="/inicio"><img class="bi me-4" src="{{ url_for('static',filename='estacionamiento.svg') }}" alt="" width="40" height="40"></a>
       <ul class="nav nav-pills">
@@ -43,9 +43,9 @@
             {% endif %}
             <li><hr class="dropdown-divider"></li>
             {% if request.path=='/baja' %}
-              <li><a href="/baja" class="dropdown-item active">Baja</a></li>
+              <li><a href="/bajamensual" class="dropdown-item active">Baja</a></li>
             {% else %}
-              <li><a href="/baja" class="dropdown-item">Baja</a></li>
+              <li><a href="/bajamensual" class="dropdown-item">Baja</a></li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
             {% if request.path=='/listado' %}

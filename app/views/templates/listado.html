@@ -13,7 +13,7 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <table class="table table-borded table-responsive table-striped " id="table-list" >
+            <table class="table table-borded table-responsive table-striped bg-light" id="table-list" >
                 <thead class="table-dark">
                     <tr>
                         <td>Piso</td>
@@ -21,6 +21,8 @@
                         <td>Patente</td>
                         <td>Celular</td>
                         <td>Fecha y Hora Entrada</td>
+                        <td>Descuento</td>
+                        <td>Estado Descuento</td>
                         <td>Dar Baja</td>
                     </tr>
                 </thead>
@@ -33,6 +35,12 @@
                             <td>{{l[2]}}</td>                            
                             <td>{{l[3]}}</td>                            
                             <td>{{l[4]}}</td> 
+                            <td>{{l[5]}}</td> 
+                            {% if l[6] %}
+                            <td>Vigente</td> 
+                            {% else %}
+                            <td>No Vigente</td> 
+                            {% endif %}
                             <td><a href="/baja/{{l[2]}}" class="btn btn-danger" role="button">Baja</a></td>                           
                         </tr>
                     {% endfor %}     

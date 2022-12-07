@@ -107,6 +107,7 @@ class Abono(Base):
     fechaInicio      = Column(String, primary_key=True)
     fechaDeseada     = Column(String, nullable=True)
     fechaVencimiento = Column(String, nullable=True)
+    fechaFin         = Column(String, nullable=True)
 
     def __init__(self, documento, fechaInicio, fechaDeseada, fechaVencimiento):
         self.documento=documento

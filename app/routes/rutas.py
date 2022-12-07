@@ -247,7 +247,7 @@ def asignardescuento(idDescuento=None):
                 return redirect(f'/asignardescuento/{idDescuento}')
     else:
         if idDescuento==None:
-            descuentos=controlador.listarDescuentos()
+            descuentos=controlador.listarDescuentosVigentes()
             return render_template('asignardescuento1.html',data_descuentos=descuentos)
         else:
             descuento=controlador.devDescuento(idDescuento)
@@ -300,6 +300,40 @@ def altamensual():
         else:
             flash('No hay Parking Disponible')
             return render_template('mensaje.html')
+
+@global_rutas.route('/bajamensual',methods=['GET','POST'])
+@global_rutas.route('/bajamensual/<documento>',methods=['GET','POST'])
+@login_required
+def bajamensual(documento=None):
+    if request.method=='POST':
+        documento=str(request.form.get('documento'))
+        respuesta=controlador.bajaClienteMensual(documento)
+        if respuesta['resultado']=='Baja':
+            flash('Baja')
+            return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='formulario') #redirect(url_for('rutasglobales.baja'))
+        elif respuesta['resultado']=='Inactivo':
+            flash('El documento ingresado corresponde a un cliente inactivo')
+            return redirect(url_for('rutasglobales.baja'))
+        else:
+            flash('El documento ingresado no corresponde a un cliente')
+            return redirect(url_for('rutasglobales.baja'))
+    else:
+        if documento==None:
+            return render_template('bajamensual.html')
+        else:
+            documentobaja=documento
+            respuesta=controlador.bajaClienteMensual(documentobaja)
+            if respuesta['resultado']=='Baja':
+                flash('Baja Realizada')
+                resumen=respuesta['resumenEstadia']
+                print(resumen)
+                return render_template('bajaresultadomonto.html',datos=respuesta['resumenEstadia'],origen='listado')
+            elif respuesta['resultado']=='Inactivo':
+                flash('El documento ingresado corresponde a un cliente inactivo')
+                return render_template('listadomensual.html')
+            else:
+                flash('El documento ingresado no corresponde a un cliente ')
+                return render_template('listadomensual.html')
 
 @global_rutas.route('/prueba',methods=['GET','POST'])
 @login_required

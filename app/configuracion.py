@@ -6,5 +6,6 @@ class Config:
     CARPETA_STATIC=os.path.abspath('./app/views/static')
     SECRET_KEY='unallavesecretaredificil'
     cantParkings=10
+    cantPisos=3                 #MODIFICAR en basedatos.py PARA QUE SIRVA CON X CANTIDAD DE PISOS
     maximoParkingsMensuales=3
     formatoFecha='%d/%m/%Y %H:%M:%S'

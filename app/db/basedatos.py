@@ -15,7 +15,7 @@ class bbdd():
         self.session.add(nuevo_trabajador)
         self.session.add(nuevo_precio)
         self.session.commit()
-        for i in range(1,self.cantidad_parkings+1):
+        for i in range(1,self.cantidad_parkings+1):         #MODIFICAR PARA QUE SIRVA CON X CANTIDAD DE PISOS
             if i<=self.cantidad_parkings/3:
                 pisoelegido=1
             elif i<=self.cantidad_parkings/3*2:
@@ -97,16 +97,31 @@ class bbdd():
     def liberar_parking(self,nroParkingLiberar):
         self.session.query(Parking).filter_by(nroParking=nroParkingLiberar).update({Parking.ocupado:False})
         self.session.commit()
+    
+    def liberar_parking_mensual(self,nroParkingLiberar):
+        self.session.query(Parking).filter_by(nroParking=nroParkingLiberar).update({Parking.ocupado:False,Parking.mensual:False})
+        self.session.commit()
 
     def dev_estadias_activas(self):
-        lista_desorganizada=self.session.query(Estadia,Cliente,Parking).filter_by(fechaHoraEgreso=None).join(Cliente).join(Parking).order_by(Parking.piso,Parking.nroParking).all()
-        i=0
-        columnas=5
-        filas=len(lista_desorganizada)
-        lista=[[0 for _ in range(columnas)]]*filas
-        for l in lista_desorganizada:
-            lista[i]=[l[2].piso,l[0].nroParking,l[0].patente,l[1].celular,l[0].fechaHoraIngreso]
-            i+=1        
+        #lista_desorganizada=self.session.query(Estadia,Cliente,Parking,Descuento).filter_by(fechaHoraEgreso=None).join(Cliente).join(Parking).join(Descuento).order_by(Parking.piso,Parking.nroParking).all()
+        #i=0
+        #columnas=5
+        #filas=len(lista_desorganizada)
+        #lista=[[0 for _ in range(columnas)]]*filas
+        #for l in lista_desorganizada:
+        #    lista[i]=[l[2].piso,l[0].nroParking,l[0].patente,l[1].celular,l[0].fechaHoraIngreso,l[3].descripcion]
+        #    i+=1 
+        query=  """ SELECT parking.piso,parking.nroParking,cliente.patente,cliente.celular,estadia.fechaHoraIngreso,descuento.descripcion,descuento.vigente
+                    FROM estadia
+                    INNER JOIN cliente
+                        ON cliente.patente=estadia.patente
+                    INNER JOIN parking
+                        ON estadia.nroParking=parking.nroParking
+                    INNER JOIN descuento
+                        ON cliente.idDescuento=descuento.idDescuento
+                    WHERE estadia.fechaHoraEgreso IS NULL
+                """
+        lista=self.session.execute(query).all()
         return lista
 
     def dev_lista_descuentos(self):
@@ -177,6 +192,10 @@ class bbdd():
             nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada)
             self.session.add(nuevoAbono)
             self.session.commit()
+    
+    def desactivar_abono_cliente(self,documentoBaja):
+        self.session.query(Abono).filter_by(documento=documentoBaja,fechaFin=None).update({Abono.fechaFin:datetime.now().strftime(Config.formatoFecha)})
+        self.session.commit()
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings

@@ -42,6 +42,9 @@ class Controlador():
     def devCliente(self,patenteIngresada):
         patenteIngresada=patenteIngresada.replace(" ", "")
         return self.base.dev_cliente(patenteIngresada)
+
+    def devClienteMensual(self,documentoIngresado):
+        return self.base.dev_cliente_mensual(documentoIngresado)
     
     def devDescuento(self,idIngresado):
         return self.base.dev_descuento(idIngresado)
@@ -189,7 +192,7 @@ class Controlador():
             return nroParkingIngresado
 
     def validarClienteMensual(self,documentoIngresado):
-        resultado=self.base.dev_cliente_mensual(documentoIngresado)
+        resultado=self.devClienteMensual(documentoIngresado)
         if resultado is None:
             return 'Nuevo'
         elif resultado.activo:
@@ -211,3 +214,14 @@ class Controlador():
             self.base.ocupar_parking_mensual(nroParkingOcupar=nuevoClienteMensual.nroParking)
             self.base.nuevo_abono(nuevoClienteMensual.documento,mesesDeseados)
             return 'Alta'
+    
+    def bajaClienteMensual(self,documentobaja):
+        clienteBajar=self.devClienteMensual(documentobaja)
+        if clienteBajar is None:
+            return 'Inexistente'
+        elif clienteBajar.activo:
+            self.base.desactivar_abono_cliente(documentobaja)
+            self.base.liberar_parking_mensual(clienteBajar.nroParking)
+            return 'Baja'
+        else:
+            return 'Inactivo'
