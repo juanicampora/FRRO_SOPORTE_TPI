@@ -93,13 +93,15 @@ class ClienteMensual(Base):
     celular       = Column(Integer, nullable=True)
     activo        = Column(Boolean, nullable=False)
     nroParking    = Column(Integer, ForeignKey('parking.nroParking'), nullable=False)
+    idDescuento   = Column(Integer, ForeignKey('descuento.idDescuento') ,nullable=True)
 
-    def __init__(self, documento,nombre,celular,activo,nroParking):
+    def __init__(self, documento,nombre,celular,activo,nroParking,idDescuento):
         self.documento=documento
         self.nombre=nombre
         self.celular=celular
         self.activo=activo
         self.nroParking=nroParking
+        self.idDescuento=idDescuento
 
 class Abono(Base):
     __tablename__    = 'abono'

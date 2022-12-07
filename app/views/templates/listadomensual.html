@@ -1,0 +1,59 @@
+{% include 'header.html' %}
+    <br>
+    <br>
+    <div class="container">
+        <div class="table-content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>   
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <table class="table table-borded table-responsive table-striped bg-light" id="table-list" >
+                <thead class="table-dark">
+                    <tr>            
+                        <td>Nro Parking</td>
+                        <td>Piso</td>
+                        <td>Documento</td>
+                        <td>Nombre</td>
+                        <td>Fecha Inicio</td>
+                        <td>Fecha Deseada Fin</td>
+                        <td>Fecha Vencimiento Pago</td>
+                        <td>Descuento</td>
+                        <td>Estado Descuento</td>
+                        <td>Dar Baja</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for l in data_lista %}
+                        <tr>
+                            <td>{{l[0]}}</td>                            
+                            <td>{{l[1]}}</td>                            
+                            <td>{{l[2]}}</td>                            
+                            <td>{{l[3]}}</td>                            
+                            <td>{{l[4]}}</td> 
+                            <td>{{l[5]}}</td> 
+                            {% if l[6]==None%}
+                            <td> </td>
+                            {% else %}
+                            <td>{{l[6]}}</td> 
+                            {% endif %}
+                            <td>{{l[7]}}</td> 
+                            {% if l[8] %}
+                            <td>Vigente</td> 
+                            {% else %}
+                            <td>No Vigente</td> 
+                            {% endif %}
+                            <td><a href="/bajamensual/{{l[2]}}" class="btn btn-danger" role="button">Baja</a></td>                           
+                        </tr>
+                    {% endfor %}     
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% include 'footer.html' %}

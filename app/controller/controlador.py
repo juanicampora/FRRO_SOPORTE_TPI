@@ -226,3 +226,6 @@ class Controlador():
             return 'Baja'
         else:
             return 'Inactivo'
+
+    def listarClientesMensualesActivos(self):
+        return self.base.dev_lista_clientes_mensuales_activos()

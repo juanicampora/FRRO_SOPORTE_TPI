@@ -189,9 +189,9 @@ class bbdd():
         else:
             mesesDeseados=int(mesesDeseados)
             fechaDeseada=(datetime.now()+relativedelta(months=mesesDeseados)).strftime(Config.formatoFecha)
-            nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada,fechaVencimiento=None)
-            self.session.add(nuevoAbono)
-            self.session.commit()
+        nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada,fechaVencimiento=None)
+        self.session.add(nuevoAbono)
+        self.session.commit()
     
     def desactivar_abono_cliente(self,documentoBaja):
         self.session.query(Abono).filter_by(documento=documentoBaja,fechaFin=None).update({Abono.fechaFin:datetime.now().strftime(Config.formatoFecha)})
@@ -200,6 +200,20 @@ class bbdd():
     def desactivar_cliente_mensual(self,documentoBaja):
         self.session.query(ClienteMensual).filter_by(documento=documentoBaja).update({ClienteMensual.activo:False})
         self.session.commit()
+    
+    def dev_lista_clientes_mensuales_activos(self):
+        query=  """ SELECT parking.nroParking,piso,clientemensual.documento,clientemensual.nombre,fechaInicio, fechaDeseada, fechaVencimiento,descripcion,vigente
+                    FROM abono
+                    INNER JOIN clientemensual
+                        ON abono.documento=clientemensual.documento
+                    INNER JOIN parking
+                        ON clientemensual.nroParking=parking.nroParking
+                    INNER JOIN descuento
+                        ON clientemensual.idDescuento=descuento.idDescuento
+                    WHERE abono.fechaFin IS NULL
+                """
+        lista=self.session.execute(query).all()
+        return lista
 
     def __init__(self,cantParkings):
         self.cantidad_parkings=cantParkings

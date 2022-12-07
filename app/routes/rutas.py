@@ -274,7 +274,7 @@ def altamensual():
         if nroParking=='Ocupado':
             flash('El numero de parking ingresado corresponde a uno Ocupado')
             return redirect(url_for('rutasglobales.altamensual'))
-        nuevoClienteMensual=ClienteMensual(documento=documento,nombre=nombre,celular=celular,activo=True,nroParking=nroParking)
+        nuevoClienteMensual=ClienteMensual(documento=documento,nombre=nombre,celular=celular,activo=True,nroParking=nroParking,idDescuento=1)
         resultado=controlador.altaClienteMensual(nuevoClienteMensual,mesesDeseados)
         if resultado=='Alta':
             flash('Alta')
@@ -302,7 +302,7 @@ def altamensual():
             return render_template('mensaje.html')
 
 @global_rutas.route('/bajamensual',methods=['GET','POST'])
-@global_rutas.route('/bajamensual/<documento>',methods=['GET','POST'])
+@global_rutas.route('/bajamensual/<documento>',methods=['GET'])
 @login_required
 def bajamensual(documento=None):
     if request.method=='POST':
@@ -326,15 +326,19 @@ def bajamensual(documento=None):
             respuesta=controlador.bajaClienteMensual(documentobaja)
             if respuesta=='Baja':
                 flash('Baja Realizada')
-                resumen=respuesta['resumenEstadia']
-                print(resumen)
-                return render_template('bajaresultadomonto.html',datos=respuesta)
+                return redirect(url_for('rutasglobales.listadomensual'))
             elif respuesta=='Inactivo':
                 flash('El documento ingresado corresponde a un cliente inactivo')
-                return render_template('listadomensual.html')
+                return redirect(url_for('rutasglobales.listadomensual'))
             else:
                 flash('El documento ingresado no corresponde a un cliente')
-                return render_template('listadomensual.html')
+                return redirect(url_for('rutasglobales.listadomensual'))
+
+@global_rutas.route('/listadomensual')
+@login_required
+def listadomensual():
+    lista=controlador.listarClientesMensualesActivos()
+    return render_template('listadomensual.html',data_lista=lista)
 
 @global_rutas.route('/prueba',methods=['GET','POST'])
 @login_required
