@@ -253,6 +253,42 @@ def asignardescuento(idDescuento=None):
             descuento=controlador.devDescuento(idDescuento)
             return render_template('asignardescuento2.html',data_descuento=descuento)
 
+############################################################################# HASTA ACA EL MODULO DIARIO FUNCIONANDO
+
+@global_rutas.route('/altamensual' ,methods=['GET','POST'])
+@login_required
+def altamensual():
+    if request.method=='POST':
+        nuevapatente=str(request.form.get('patente'))
+        celularingresado=request.form.get('celular')
+        if nuevapatente=='':
+            flash('Ingrese una patente')
+            return redirect(url_for('rutasglobales.alta'))
+        if celularingresado=='':
+            nuevocelular=None
+        else:
+            nuevocelular=int(celularingresado)
+        nuevocliente=Cliente(patente=nuevapatente,celular=nuevocelular,activo=True)
+        resultado=controlador.altaCliente(nuevocliente)
+        if resultado=='Alta':
+            flash('Alta')
+            return redirect(url_for('rutasglobales.alta'))
+        elif resultado=='Activo':
+            flash('El cliente previamente fue dado de Alta')
+            return redirect(url_for('rutasglobales.alta'))
+        elif resultado=='Actualizado':
+            flash('Alta realizada a un cliente registrado anteriormente, se actualizó su celular')
+            return redirect(url_for('rutasglobales.alta'))
+        else:
+            flash('Alta realizada a un cliente registrado anteriormente')
+            return redirect(url_for('rutasglobales.alta'))
+    else:
+        if controlador.verifParkingDisponible():
+            return render_template('alta.html')
+        else:
+            flash('No hay Parking Disponible')
+            return render_template('mensaje.html')
+
 @global_rutas.route('/prueba',methods=['GET','POST'])
 @login_required
 def prueba():
