@@ -9,3 +9,4 @@ class Config:
     cantPisos=3                 #MODIFICAR en basedatos.py PARA QUE SIRVA CON X CANTIDAD DE PISOS
     maximoParkingsMensuales=3
     formatoFecha='%d/%m/%Y %H:%M:%S'
+    formatoFechaCorta='%d/%m/%Y'

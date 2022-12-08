@@ -25,16 +25,18 @@ class Precio(Base):
     __tablename__ = 'precio'
     idPrecio    = Column(Integer,   primary_key=True,   autoincrement=True)
     precioBase  = Column(Float,     nullable=False)
-    precioMinuto= Column(Float,     nullable=False)
+    precioMinuto= Column(Float,     nullable=True)
     fechaAlta   = Column(String,    nullable=False)
     fechaBaja   = Column(String,    nullable=True)
+    mensual     = Column(Boolean,   nullable=False, default=False)
 
-    def __init__(self, idPrecio, precioBase,precioMinuto,fechaAlta, fechaBaja):
+    def __init__(self, idPrecio, precioBase,precioMinuto,fechaAlta, fechaBaja, mensual):
         self.idPrecio=idPrecio
         self.precioBase=precioBase
         self.precioMinuto=precioMinuto
         self.fechaAlta=fechaAlta
         self.fechaBaja=fechaBaja
+        self.mensual=mensual
 
 class Descuento(Base):
     __tablename__ = 'descuento'

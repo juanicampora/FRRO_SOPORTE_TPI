@@ -1,0 +1,78 @@
+{% include 'headerdesactivado.html' %}
+
+<div class="modal modal-signin position-static d-block bg-secondary py-1" tabindex="-1" role="dialog" id="modalSignin">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header px-5 pt-4 pb-0 border-bottom-0">
+          <h2 class="border-bottom fw-bold mb-0 fs-2 pb-2 w-100 text-center">Resumen Estadía Cliente</h2>
+        </div>
+         
+        <div class="modal-body px-5 pt-1 pb-2">
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='patente.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">Nombre Cliente</strong>
+                    </div>
+                    <span class="d-block">{{datos.nombre}}</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='tiempo.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">Meses a Pagar</strong>
+                    </div>
+                    <span class="d-block">{{datos.mesesPagar}} {%if datos.mesesPagar==1%}mes{%else%}meses{%endif%}</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='costo.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">Costo sin Descuento</strong>
+                    </div>
+                    <span class="d-block">${{datos.costo}}</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='descuento.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Descuento aplicado</strong>
+                </div>
+                <span class="d-block">{{datos.valorDescuento}}% &nbsp &nbsp ({{datos.descripcionDescuento}})</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100"></div>
+            </div>
+    
+            <div class="d-flex text-muted align-items-center pt-1">
+                <img class="bi me-4" src="{{ url_for('static',filename='monto.svg') }}" alt="" width="32" height="32">
+                <strong class="text-dark fs-3">Total a Pagar:</strong>
+                <span class="d-block fs-4">&nbsp &nbsp ${{datos.monto}}</span>    
+            </div>
+            <div class="pb-1 mb-0 small lh-sm border-bottom w-100"></div>
+            <br>
+            <br>
+            <div class="row row-cols-1 row-cols-md-2 mb-3">
+                <div class="col">
+                    <a href="/pagomensual/{{datos.documento}}"><button class="w-100 mb-2 btn btn-lg rounded-3 btn-danger">Regresar</button></a>
+                </div>
+                <div class="col">   
+                    <form class="" action="/pagomensual" method="post">
+                        <input type="hidden" name="mesesPagarPrevio" id="mesesPagarPrevio" value="{{datos.mesesPagar}}">
+                        <input type="hidden" name="mesesOcuparPrevio" id="mesesOcuparPrevio" value="{{datos.mesesOcupar}}">
+                        <input type="hidden" name="documentoPrevio" id="documentoPrevio" value="{{datos.documento}}">
+                        <input type="hidden" name="accion" id="accion" value="salioDePagoMensual_3">
+                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-success" type="submit">Pagado</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'footer.html' %}

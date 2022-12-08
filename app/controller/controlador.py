@@ -1,8 +1,9 @@
 from datetime import datetime,timedelta
+from dateutil.relativedelta import relativedelta
 from app.db.basedatos import bbdd
 from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
 from os import path
-from app.controller.clases import ResumenEstadia
+from app.controller.clases import ResumenEstadia,ResumenPagoCochera,FinPagoMensual
 from app.configuracion import Config
 
 class Controlador():
@@ -12,6 +13,10 @@ class Controlador():
         if not(existiaBD):
             self.base.inicializar_tablas()
     
+    def acortarFecha(self,fechaIngresada):
+        fechaVencimientoCorta=(datetime.strptime(fechaIngresada,Config.formatoFecha)).strftime(Config.formatoFechaCorta)
+        return fechaVencimientoCorta
+
     def devTrabajador(self,usuarioIngresado):
         return self.base.dev_trabajador_id(usuarioIngresado)
 
@@ -49,8 +54,11 @@ class Controlador():
     def devDescuento(self,idIngresado):
         return self.base.dev_descuento(idIngresado)
     
-    def devPrecioActual(self):
-        return self.base.dev_precio_actual()
+    def devPrecioActualDiario(self):
+        return self.base.dev_precio_actual_diario()
+    
+    def devPrecioActualMensual(self):
+        return self.base.dev_precio_actual_mensual()
 
     def devParkingDisponible(self):
         return self.base.dev_nro_parking_disponible()
@@ -83,7 +91,7 @@ class Controlador():
 
     def calculaCosto(self,estadia:Estadia):
         tiempoEstadia=( datetime.strptime(estadia.fechaHoraEgreso,Config.formatoFecha) - datetime.strptime(estadia.fechaHoraIngreso,Config.formatoFecha) ) / timedelta(minutes=1) 
-        precioActual=self.devPrecioActual()
+        precioActual=self.devPrecioActualDiario()
         costo=precioActual.precioBase + tiempoEstadia*precioActual.precioMinuto
         return {'costo':costo,'tiempoEstadia':round(tiempoEstadia,2),'precioBase':round(precioActual.precioBase,2)}
 
@@ -121,8 +129,11 @@ class Controlador():
     def listarEstadiasClientesActivos(self):
         return self.base.dev_estadias_activas()
         
-    def listarDescuentos(self):
-        return self.base.dev_lista_descuentos()
+    def listarDescuentosDiarios(self):
+        return self.base.dev_lista_descuentos_diarios()
+
+    def listarDescuentosMensuales(self):
+        return self.base.dev_lista_descuentos_mensuales()
 
     def listarDescuentosVigentes(self):
         return self.base.dev_lista_descuentos_vigentes()
@@ -130,8 +141,8 @@ class Controlador():
     def listarDescuentosMensualesVigentes(self):
         return self.base.dev_lista_descuentos_mensuales_vigentes()
 
-    def nuevoDescuento(self,descripcionIngresada,valorIngresado):
-        self.base.nuevo_descuento(descripcionIngresada,valorIngresado)
+    def nuevoDescuento(self,descripcionIngresada,valorIngresado,tipoIngresado):
+        self.base.nuevo_descuento(descripcionIngresada,valorIngresado,tipoIngresado)
 
     def bajaDescuento(self,idbaja):
         if self.devDescuento(idbaja) is None:
@@ -151,21 +162,37 @@ class Controlador():
             self.base.activar_descuento(idalta)
             return 'Alta'
 
-    def calculaNuevoPrecioPorcentaje(self,porcentajeBase,porcentajeMinuto):
-        precioBaseActual=self.devPrecioActual().precioBase
-        precioMinutoActual=self.devPrecioActual().precioMinuto
+    def calculaNuevoPrecioPorcentajeDiario(self,porcentajeBase,porcentajeMinuto):
+        precioBaseActual=self.devPrecioActualDiario().precioBase
+        precioMinutoActual=self.devPrecioActualDiario().precioMinuto
         nuevoPrecioBase=round(precioBaseActual+precioBaseActual*porcentajeBase/100,2)
         nuevoPrecioMinuto=round(precioMinutoActual+precioMinutoActual*porcentajeMinuto/100,2)
         return (nuevoPrecioBase,nuevoPrecioMinuto)
+    
+    def calculaNuevoPrecioPorcentajeMensual(self,porcentajeBase):
+        precioBaseActual=self.devPrecioActualMensual().precioBase
+        nuevoPrecioBase=round(precioBaseActual+precioBaseActual*porcentajeBase/100,2)
+        return nuevoPrecioBase
 
-    def nuevoPrecio(self,precioBase,precioMinuto):
-        self.base.nuevo_precio(precioBase,precioMinuto)
+    def nuevoPrecioDiario(self,precioBase,precioMinuto):
+        self.base.nuevo_precio_diario(precioBase,precioMinuto)
+    
+    def nuevoPrecioMensual(self,precioBase):
+        self.base.nuevo_precio_mensual(precioBase)
 
-    def bajaPrecioAnterior(self):
-        self.base.baja_precio_anterior()
+    def bajaPrecioAnteriorDiario(self):
+        self.base.baja_precio_anterior_diario()
+    
+    def bajaPrecioAnteriorMensual(self):
+        self.base.baja_precio_anterior_mensual()
 
-    def listarPrecios(self):
-        precios=self.base.dev_lista_precios()
+    def listarPreciosDiarios(self):
+        precios=self.base.dev_lista_precios_diarios()
+        preciosOrdenados=sorted(precios, key=lambda precio: datetime.strptime(precio.fechaAlta,Config.formatoFecha), reverse=True)
+        return preciosOrdenados
+    
+    def listarPreciosMensual(self):
+        precios=self.base.dev_lista_precios_mensual()
         preciosOrdenados=sorted(precios, key=lambda precio: datetime.strptime(precio.fechaAlta,Config.formatoFecha), reverse=True)
         return preciosOrdenados
 
@@ -242,3 +269,39 @@ class Controlador():
         else:
             self.base.asignar_descuento_mensual(clienteIngresado.documento,idDescuentoIngresado)
             return 'Asignado'
+    
+    def calcularMesesDeuda(self,fechaVencimiento):
+        fechaVencimiento=datetime.strptime(fechaVencimiento,Config.formatoFecha)
+        fechaActual=datetime.now()
+        mesesDeuda=0
+        while fechaVencimiento.month<=fechaActual.month and fechaVencimiento.year<=fechaActual.year:
+            mesesDeuda+=1
+            fechaVencimiento=fechaVencimiento+relativedelta(months=1)
+        return mesesDeuda
+
+    def resumenPagoMensual(self,documentoIngresado):
+        cliente=self.devClienteMensual(documentoIngresado)
+        if  cliente==None:
+            return 'Inexistente'
+        else:
+            abono=self.base.dev_abono_cliente(documentoIngresado)
+            descuento=self.base.dev_descuento(cliente.idDescuento)
+            mesesDeuda=self.calcularMesesDeuda(abono.fechaVencimiento)
+            precio=self.base.dev_precio_actual_mensual()
+            monto=precio.precioBase*mesesDeuda*(1-descuento.valor/100)
+            fechaVencimientoCorta=self.acortarFecha(abono.fechaVencimiento)
+            fechaDeseadaCorta=self.acortarFecha(abono.fechaDeseada)
+            resumen=ResumenPagoCochera(documento=cliente.documento,nombre=cliente.nombre,fechaVencimiento=fechaVencimientoCorta,fechaDeseada=fechaDeseadaCorta,mesesDeuda=mesesDeuda,
+                                        valorDescuento=descuento.valor,descripcionDescuento=descuento.descripcion,precioMes=precio.precioBase,monto=monto)
+            return resumen
+    
+    def finPagoMensual(self,mesesPagar,mesesOcupar,documentoPrevio):
+        datosPrevios=self.resumenPagoMensual(documentoPrevio)
+        nombre=datosPrevios.nombre
+        costo=datosPrevios.precioMes
+        monto=costo*(1-datosPrevios.valorDescuento/100)
+        finPago=FinPagoMensual(nombre=nombre,documento=documentoPrevio,mesesPagar=mesesPagar,mesesOcupar=mesesOcupar,costo=costo,monto=monto,valorDescuento=datosPrevios.valorDescuento,descripcionDescuento=datosPrevios.descripcionDescuento)
+        return finPago
+
+    def efectuarPagoMensual(self,documento,mesesPagar,mesesOcupar):
+        self.base.actualizar_abono_mensual(documento,mesesPagar,mesesOcupar)

@@ -11,11 +11,13 @@ class bbdd():
         nuevo_descuento=Descuento(1,'Sin descuento',0,False,True)
         nuevo_descuento_mensual=Descuento(2,'Sin descuento',0,True,True)
         nuevo_trabajador=Trabajador('admin','123','Administrador')
-        nuevo_precio=Precio(None,100,10,datetime.now().strftime(Config.formatoFecha),None)
+        nuevo_precio_diario=Precio(None,100,10,datetime.now().strftime(Config.formatoFecha),None,False)
+        nuevo_precio_mensual=Precio(None,1000,10,datetime.now().strftime(Config.formatoFecha),None,True)
         self.session.add(nuevo_descuento)
         self.session.add(nuevo_descuento_mensual)
         self.session.add(nuevo_trabajador)
-        self.session.add(nuevo_precio)
+        self.session.add(nuevo_precio_diario)
+        self.session.add(nuevo_precio_mensual)
         self.session.commit()
         for i in range(1,self.cantidad_parkings+1):         #MODIFICAR PARA QUE SIRVA CON X CANTIDAD DE PISOS
             if i<=self.cantidad_parkings/3:
@@ -126,8 +128,11 @@ class bbdd():
         lista=self.session.execute(query).all()
         return lista
 
-    def dev_lista_descuentos(self):
-        return self.session.query(Descuento).all()
+    def dev_lista_descuentos_diarios(self):
+        return self.session.query(Descuento).filter_by(mensual=False).all()
+    
+    def dev_lista_descuentos_mensuales(self):
+        return self.session.query(Descuento).filter_by(mensual=True).all()
 
     def dev_lista_descuentos_vigentes(self):
         return self.session.query(Descuento).filter_by(vigente=True,mensual=False).all()   
@@ -135,8 +140,8 @@ class bbdd():
     def dev_lista_descuentos_mensuales_vigentes(self):
         return self.session.query(Descuento).filter_by(vigente=True,mensual=True).all()   
 
-    def nuevo_descuento(self,descripcionIngresada,valorIngresado):
-        nuevoDescuento=Descuento(idDescuento=None,descripcion=descripcionIngresada,valor=valorIngresado,vigente=None)
+    def nuevo_descuento(self,descripcionIngresada,valorIngresado,tipoIngresado):
+        nuevoDescuento=Descuento(idDescuento=None,descripcion=descripcionIngresada,valor=valorIngresado,mensual=tipoIngresado,vigente=None)
         self.session.add(nuevoDescuento)
         self.session.commit()
 
@@ -149,20 +154,35 @@ class bbdd():
         self.session.query(Descuento).filter_by(idDescuento=idAlta).update({Descuento.vigente:True})
         self.session.commit()
 
-    def nuevo_precio(self,precioBase,precioMinuto):
-        nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=precioMinuto,fechaAlta=datetime.now().strftime(Config.formatoFecha),fechaBaja=None)
+    def nuevo_precio_diario(self,precioBase,precioMinuto):
+        nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=precioMinuto,fechaAlta=datetime.now().strftime(Config.formatoFecha),fechaBaja=None,mensual=False)
+        self.session.add(nuevoPrecio)
+        self.session.commit()
+    
+    def nuevo_precio_mensual(self,precioBase):
+        nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=None,fechaAlta=datetime.now().strftime(Config.formatoFecha),fechaBaja=None,mensual=True)
         self.session.add(nuevoPrecio)
         self.session.commit()
 
-    def dev_lista_precios(self):
-        return self.session.query(Precio).all()
+    def dev_lista_precios_diarios(self):
+        return self.session.query(Precio).filter_by(mensual=False).all()
+    
+    def dev_lista_precios_mensual(self):
+        return self.session.query(Precio).filter_by(mensual=True).all()
 
-    def baja_precio_anterior(self):
-        self.session.query(Precio).filter_by(fechaBaja=None).update({Precio.fechaBaja:datetime.now().strftime(Config.formatoFecha)})
+    def baja_precio_anterior_diario(self):
+        self.session.query(Precio).filter_by(fechaBaja=None,mensual=False).update({Precio.fechaBaja:datetime.now().strftime(Config.formatoFecha)})
+        self.session.commit()
+    
+    def baja_precio_anterior_mensual(self):
+        self.session.query(Precio).filter_by(fechaBaja=None,mensual=True).update({Precio.fechaBaja:datetime.now().strftime(Config.formatoFecha)})
         self.session.commit()
 
-    def dev_precio_actual(self):
-        return self.session.query(Precio).filter_by(fechaBaja=None).first()
+    def dev_precio_actual_diario(self):
+        return self.session.query(Precio).filter_by(fechaBaja=None,mensual=False).first()
+    
+    def dev_precio_actual_mensual(self):
+        return self.session.query(Precio).filter_by(fechaBaja=None,mensual=True).first()
 
     def asignar_descuento(self,patenteCliente,idDescuentoIngresado):
         self.session.query(Cliente).filter_by(patente=patenteCliente).update({Cliente.idDescuento:idDescuentoIngresado})
@@ -194,7 +214,7 @@ class bbdd():
         else:
             mesesDeseados=int(mesesDeseados)
             fechaDeseada=(datetime.now()+relativedelta(months=mesesDeseados)).strftime(Config.formatoFecha)
-        nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada,fechaVencimiento=None)
+        nuevoAbono=Abono(documento=documentoClienteMensual,fechaInicio=datetime.now().strftime(Config.formatoFecha),fechaDeseada=fechaDeseada,fechaVencimiento=datetime.now().strftime(Config.formatoFecha))
         self.session.add(nuevoAbono)
         self.session.commit()
     
@@ -222,6 +242,18 @@ class bbdd():
 
     def asignar_descuento_mensual(self,documentoCliente,idDescuentoIngresado):
         self.session.query(ClienteMensual).filter_by(documento=documentoCliente).update({ClienteMensual.idDescuento:idDescuentoIngresado})
+        self.session.commit()
+
+    def dev_abono_cliente(self,documentoCliente):
+        return self.session.query(Abono).filter_by(documento=str(documentoCliente),fechaFin=None).first()
+
+    def actualizar_abono_mensual(self,documentoCliente,mesesPagar,mesesOcupar):
+        abonoCliente=self.dev_abono_cliente(documentoCliente)
+        fechaVencimiento=abonoCliente.fechaVencimiento
+        fechaDeseada=abonoCliente.fechaDeseada
+        fechaDeseadaNueva=(datetime.strptime(fechaDeseada,Config.formatoFecha)+relativedelta(months=mesesOcupar)).strftime(Config.formatoFecha)
+        fechaVencimientoNueva=(datetime.strptime(fechaVencimiento,Config.formatoFecha)+relativedelta(months=mesesPagar)).strftime(Config.formatoFecha)
+        self.session.query(Abono).filter_by(documento=documentoCliente,fechaFin=None).update({Abono.fechaVencimiento:fechaVencimientoNueva,Abono.fechaDeseada:fechaDeseadaNueva})
         self.session.commit()
 
     def __init__(self,cantParkings):

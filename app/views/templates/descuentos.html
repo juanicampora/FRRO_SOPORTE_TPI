@@ -33,6 +33,7 @@
                     <tr>
                         <td>Descripción</td>
                         <td>Valor</td>
+                        <td>Tipo (diario/mensual)</td>
                         <td>Acción</td>
                     </tr>
                 </thead>
@@ -51,12 +52,19 @@
                                     <label for="txtValor">Valor</label>
                                 </div>
                             </td>
+                            <td>
+                                <select class="form-select" name="tipoDescuento" aria-label="tipoDescuento">
+                                    <option selected>Seleccione tipo de Descuento</option>
+                                    <option value="diario">Diario</option>
+                                    <option value="mensual">Mensual</option>
+                                </select>
+                            </td>
                             <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
                         </form>                            
                     </tr>
                 </tbody>
             </table>
-            <h1>Listado Descuentos</h1>
+            <h1>Listado Descuentos Diarios</h1>
             <table class="table table-borded table-responsive table-striped " id="table-list" >
                 <thead class="table-dark">
                     <tr>
@@ -69,7 +77,41 @@
                 </thead>
 
                 <tbody>
-                    {% for d in data_descuentos %}
+                    {% for d in data_descuentos_diarios %}
+                        {% if d.vigente==False %}
+                            <tr class="table-danger">
+                                <td>No Vigente</td>
+                                <td>{{d.idDescuento}}</td>                            
+                                <td>{{d.descripcion}}</td>                            
+                                <td>{{d.valor}}</td>                            
+                                <td><a href="/descuentos/alta/{{d.idDescuento}}" class="btn btn-success" role="button">Alta vigencia</a></td>                           
+                            </tr>
+                        {% else %}
+                            <tr class="table-success">
+                                <td>Vigente</td>
+                                <td>{{d.idDescuento}}</td>                            
+                                <td>{{d.descripcion}}</td>                            
+                                <td>{{d.valor}}</td>                            
+                                <td><a href="/descuentos/baja/{{d.idDescuento}}" class="btn btn-danger" role="button">Baja vigencia</a></td>                           
+                            </tr>
+                        {% endif %}
+                    {% endfor %} 
+                </tbody>
+            </table>
+            <h1>Listado Descuentos Mensuales</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Vigencia</td>
+                        <td>idDescuento</td>
+                        <td>Descripción</td>
+                        <td>Valor</td>                        
+                        <td>Acción</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for d in data_descuentos_mensuales %}
                         {% if d.vigente==False %}
                             <tr class="table-danger">
                                 <td>No Vigente</td>

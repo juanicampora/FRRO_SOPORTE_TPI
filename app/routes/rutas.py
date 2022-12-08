@@ -146,16 +146,23 @@ def descuentos():
     if request.method=='POST':
         descripcion= request.form['txtDescripcion']
         valor= request.form['txtValor']
+        tipoDescuento= request.form['tipoDescuento']
+        if    tipoDescuento=='mensual': tipoDescuento=True
+        elif  tipoDescuento=='diario':  tipoDescuento=False
+        else:
+            flash('Error, complete todos los campos')
+            return redirect(url_for('rutasglobales.descuentos'))
         if descripcion=='' or valor=='':
             flash('Error, complete todos los campos')
             return redirect(url_for('rutasglobales.descuentos'))
         else:
-            controlador.nuevoDescuento(descripcion,valor)
+            controlador.nuevoDescuento(descripcion,valor,tipoDescuento)
             flash('Registrado Correctamente')
             return redirect(url_for('rutasglobales.descuentos'))
     else:
-        descuentos=controlador.listarDescuentos()
-        return render_template('descuentos.html',data_descuentos=descuentos)
+        descuentosDiarios=controlador.listarDescuentosDiarios()
+        descuentosMensuales=controlador.listarDescuentosMensuales()
+        return render_template('descuentos.html',data_descuentos_diarios=descuentosDiarios,data_descuentos_mensuales=descuentosMensuales)
 
 @global_rutas.route('/descuentos/<accion>/<idDescuento>')
 @login_required
@@ -195,8 +202,8 @@ def precios():
                 flash('Error, complete todos los campos')
                 return redirect(url_for('rutasglobales.precios'))
             else:
-                controlador.bajaPrecioAnterior()
-                controlador.nuevoPrecio(precioBase,precioMinuto)
+                controlador.bajaPrecioAnteriorDiario()
+                controlador.nuevoPrecioDiario(precioBase,precioMinuto)
                 flash('Registrado Correctamente')
                 return redirect(url_for('rutasglobales.precios'))
         else:
@@ -206,13 +213,13 @@ def precios():
                 flash('Error, complete todos los campos')
                 return redirect(url_for('rutasglobales.precios'))
             else:
-                nuevosPrecios=controlador.calculaNuevoPrecioPorcentaje(porcentajeBase,porcentajeMinuto)
-                controlador.bajaPrecioAnterior()
-                controlador.nuevoPrecio(nuevosPrecios[0],nuevosPrecios[1])
+                nuevosPrecios=controlador.calculaNuevoPrecioPorcentajeDiario(porcentajeBase,porcentajeMinuto)
+                controlador.bajaPrecioAnteriorDiario()
+                controlador.nuevoPrecioDiario(nuevosPrecios[0],nuevosPrecios[1])
                 flash('Registrado Correctamente')
                 return redirect(url_for('rutasglobales.precios'))
     else:
-        precios=controlador.listarPrecios()
+        precios=controlador.listarPreciosDiarios()
         return render_template('precios.html',data_precios=precios)
 
 @global_rutas.route('/baja/montopagar',methods=['GET','POST'])      #BORRAR  SI NO SIRVE
@@ -367,3 +374,69 @@ def asignardescuentomensual(idDescuento=None):
         else:
             descuento=controlador.devDescuento(idDescuento)
             return render_template('asignardescuentomensual2.html',data_descuento=descuento)
+
+@global_rutas.route('/preciosmensual',methods=['GET','POST'])
+@login_required
+def preciosmensual():
+    if request.method=='POST':
+        tipoFormulario= request.form['tipoFormulario']
+        if tipoFormulario=='valor':
+            precioBase= request.form['txtPrecioBase']
+            if (precioBase==''):
+                flash('Error, complete todos los campos')
+                return redirect(url_for('rutasglobales.preciosmensual'))
+            else:
+                controlador.bajaPrecioAnteriorMensual()
+                controlador.nuevoPrecioMensual(precioBase)
+                flash('Registrado Correctamente')
+                return redirect(url_for('rutasglobales.preciosmensual'))
+        else:
+            porcentajeBase= int(request.form['txtPorcPrecioBase'])
+            if (porcentajeBase==''):
+                flash('Error, complete todos los campos')
+                return redirect(url_for('rutasglobales.preciosmensual'))
+            else:
+                nuevosPrecios=controlador.calculaNuevoPrecioPorcentajeMensual(porcentajeBase)
+                controlador.bajaPrecioAnteriorMensual()
+                controlador.nuevoPrecioMensual(nuevosPrecios)
+                flash('Registrado Correctamente')
+                return redirect(url_for('rutasglobales.preciosmensual'))
+    else:
+        precios=controlador.listarPreciosMensual()
+        return render_template('preciosmensual.html',data_precios=precios)
+
+@global_rutas.route('/pagomensual',methods=['GET','POST'])
+@global_rutas.route('/pagomensual/<documento>',methods=['GET','POST'])
+@login_required
+def pagomensual(documento=None,accion=None):
+    if request.method=='POST':
+        accion=request.form['accion']
+        if accion=='salioDePagoMensual_1':
+            documento= request.form['documento']
+            resumenPagoMensual=controlador.resumenPagoMensual(documento)
+            if resumenPagoMensual=='Inexistente':
+                flash('El documento ingresado no corresponde a un cliente')
+                return redirect(url_for('rutasglobales.pagomensual'))
+            return render_template('pagomensual2.html',datos=resumenPagoMensual) 
+        elif accion=='salioDePagoMensual_2':
+            mesesPagar= request.form['mesesPagar']
+            mesesOcupar= request.form['mesesOcupar']
+            documentoPrevio= int(request.form['documentoPrevio'])
+            finPagoMensual=controlador.finPagoMensual(mesesPagar,mesesOcupar,documentoPrevio)
+            return render_template('pagomensual3.html',datos=finPagoMensual) 
+        elif accion=='salioDePagoMensual_3':
+            mesesPagarPrevio= int(request.form['mesesPagarPrevio'])
+            mesesOcuparPrevio= int(request.form['mesesOcuparPrevio'])
+            documentoPrevio= request.form['documentoPrevio']
+            controlador.efectuarPagoMensual(documentoPrevio,mesesPagarPrevio,mesesOcuparPrevio)
+            flash('pago')
+            return render_template('pagomensual1.html')
+    else:
+        if documento==None:
+            return render_template('pagomensual1.html')
+        else:
+            resumenPagoMensual=controlador.resumenPagoMensual(documento)
+            if resumenPagoMensual=='Inexistente':
+                flash('El documento ingresado no corresponde a un cliente')
+                return redirect(url_for('rutasglobales.pagomensual'))
+            return render_template('pagomensual2.html',datos=resumenPagoMensual)

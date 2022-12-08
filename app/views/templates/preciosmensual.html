@@ -1,0 +1,109 @@
+{% include 'header.html' %}
+    <style>
+        table,
+        table td {
+        border: 1px solid #cccccc;
+        }
+        td {
+        text-align: center;
+        vertical-align: middle;
+        }
+    </style>
+    <br>
+    <br>
+    <div class="container">
+        <div class="table-content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message=="Error, complete todos los campos" %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {% else %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {% endif %}
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>   
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <h1>Actualizar Precios por Valor ($)</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>$ Actualización Precio Mes</td>
+                        <td>Acción</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-secondary">
+                        <form class="" action="/preciosmensual" method="post" name="formularioValor">                            
+                            <td  text-align:center>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtPrecioBase" name="txtPrecioBase" placeholder="Password">
+                                    <label for="txtPrecioBase">$ Actualización Precio Mes</label>
+                                </div>
+                            </td>
+                            <input type="hidden" name="tipoFormulario" id="tipoFormulario" value="valor">
+                            <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
+                        </form>                            
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Actualizar Precio por Porcentaje (%)</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>% Actualizacion Precio Mes</td>
+                        <td>Acción</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-secondary">
+                        <form class="" action="/preciosmensual" method="post" name="formularioPorc">                            
+                            <td  text-align:center>
+                                <div class="form-floating">
+                                    <input class="form-control rounded-3" id="txtPrecioBase" name="txtPorcPrecioBase" placeholder="Password">
+                                    <label for="txtPorcPrecioBase">%Actualizacion Precio Mes</label>
+                                </div>
+                            </td>
+                            <input type="hidden" name="tipoFormulario" id="tipoFormulario" value="porcentaje">
+                            <td><button class="w-100 btn btn-lg rounded-3 btn-success" type="submit">Confirmar</button></td>
+                        </form>                            
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Historial Precios Mensuales</h1>
+            <table class="table table-borded table-responsive table-striped " id="table-list" >
+                <thead class="table-dark">
+                    <tr>
+                        <td>Vigencia</td>
+                        <td>Precio Base</td>
+                        <td>Fecha Alta</td>
+                        <td>Fecha Baja</td>                       
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for p in data_precios %}
+                        {% if p.fechaBaja==None %}
+                            <tr class="table-success">
+                                <td>Vigente</td>
+                                <td>{{p.precioBase}}</td>                          
+                                <td>{{p.fechaAlta}}</td>       
+                                <td> </td>                     
+                            </tr>
+                        {% else %}
+                            <tr class="table-danger">
+                                <td>No Vigente</td>
+                                <td>{{p.precioBase}}</td>                         
+                                <td>{{p.fechaAlta}}</td>       
+                                <td>{{p.fechaBaja}}</td>                         
+                            </tr>
+                        {% endif %}
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% include 'footer.html' %}
