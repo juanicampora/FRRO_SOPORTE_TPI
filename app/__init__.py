@@ -6,6 +6,7 @@ from flask_login import LoginManager
 
 app=Flask(__name__, template_folder=Config.CARPETA_TEMPLATES, static_folder=Config.CARPETA_STATIC)
 app.config.from_object(Config)
+app.config['TRAP_HTTP_EXCEPTIONS']=True
 
 app.register_blueprint(global_rutas, url_prefix="/")
 

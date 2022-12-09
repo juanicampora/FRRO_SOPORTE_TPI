@@ -13,9 +13,8 @@ class Controlador():
         if not(existiaBD):
             self.base.inicializar_tablas()
     
-    def acortarFecha(self,fechaIngresada):
-        fechaVencimientoCorta=(datetime.strptime(fechaIngresada,Config.formatoFecha)).strftime(Config.formatoFechaCorta)
-        return fechaVencimientoCorta
+    def error(self):
+        self.base.error()
 
     def devTrabajador(self,usuarioIngresado):
         return self.base.dev_trabajador_id(usuarioIngresado)
@@ -36,7 +35,13 @@ class Controlador():
         return self.base.alta_trabajador(nuevoTrabajador)
 
     def devOcupadoParking(self,nroParking)->bool:
-        return self.base.dev_ocupado_parking(nroParking)
+        resultado=self.base.dev_ocupado_parking(nroParking)
+        if resultado==None:
+            return 'Inexistente'
+        elif resultado:
+            return 'Ocupado'
+        else:
+            return 'Libre'
 
     def verifParkingDisponible(self)->bool:
         if self.devParkingDisponible() is None:
@@ -193,7 +198,7 @@ class Controlador():
     
     def listarPreciosMensual(self):
         precios=self.base.dev_lista_precios_mensual()
-        preciosOrdenados=sorted(precios, key=lambda precio: datetime.strptime(precio.fechaAlta,Config.formatoFecha), reverse=True)
+        preciosOrdenados=sorted(precios, key=lambda precio: datetime.strptime(precio.fechaAlta,Config.formatoFechaCorta), reverse=True)
         return preciosOrdenados
 
     def asignarDescuento(self,patenteIngresada,idDescuentoIngresado:int):
@@ -215,8 +220,11 @@ class Controlador():
         if nroParkingIngresado=='':
             return self.devParkingDisponible()
         nroParkingIngresado=int(nroParkingIngresado)
-        if self.devOcupadoParking(nroParkingIngresado):
+        estadoParking=self.devOcupadoParking(nroParkingIngresado)
+        if estadoParking=='Ocupado':
             return 'Ocupado'
+        elif estadoParking=='Inexistente':
+            return 'Inexistente'
         else:
             return nroParkingIngresado
 
@@ -271,7 +279,7 @@ class Controlador():
             return 'Asignado'
     
     def calcularMesesDeuda(self,fechaVencimiento):
-        fechaVencimiento=datetime.strptime(fechaVencimiento,Config.formatoFecha)
+        fechaVencimiento=datetime.strptime(fechaVencimiento,Config.formatoFechaCorta)
         fechaActual=datetime.now()
         mesesDeuda=0
         while fechaVencimiento.month<=fechaActual.month and fechaVencimiento.year<=fechaActual.year:
@@ -289,9 +297,7 @@ class Controlador():
             mesesDeuda=self.calcularMesesDeuda(abono.fechaVencimiento)
             precio=self.base.dev_precio_actual_mensual()
             monto=precio.precioBase*mesesDeuda*(1-descuento.valor/100)
-            fechaVencimientoCorta=self.acortarFecha(abono.fechaVencimiento)
-            fechaDeseadaCorta=self.acortarFecha(abono.fechaDeseada)
-            resumen=ResumenPagoCochera(documento=cliente.documento,nombre=cliente.nombre,fechaVencimiento=fechaVencimientoCorta,fechaDeseada=fechaDeseadaCorta,mesesDeuda=mesesDeuda,
+            resumen=ResumenPagoCochera(documento=cliente.documento,nombre=cliente.nombre,fechaVencimiento=abono.fechaVencimiento,fechaDeseada=abono.fechaDeseada,mesesDeuda=mesesDeuda,
                                         valorDescuento=descuento.valor,descripcionDescuento=descuento.descripcion,precioMes=precio.precioBase,monto=monto)
             return resumen
     

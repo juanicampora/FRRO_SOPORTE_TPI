@@ -24,7 +24,7 @@
       </a>
       <ul class="nav nav-pills">
         <li class="nav-item dropend">
-          {% if request.path=='/altamensual' or request.path=='/bajamensual' or request.path=='/listadomensual' or request.path=='/asignardescuentomensual' or ('/asignardescuentomensual/' in request.path)%}
+          {% if request.path=='/altamensual' or request.path=='/bajamensual' or request.path=='/listadomensual' or request.path=='/asignardescuentomensual' or ('/asignardescuentomensual/' in request.path) or request.path=='/pagomensual' or ('/pagomensual/' in request.path)%}
           <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Cocheras Mensuales
           </a>
@@ -34,6 +34,12 @@
           </a>
           {% endif %}
           <ul class="dropdown-menu dropdown-menu-dark">
+            {% if request.path=='/pagomensual' or ('/pagomensual/' in request.path)%}
+              <li><a href="/pagomensual" class="dropdown-item active">Pago</a></li>
+            {% else %}
+              <li><a href="/pagomensual" class="dropdown-item">Pago</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
             {% if request.path=='/altamensual' %}
               <li><a href="/altamensual" class="dropdown-item active">Alta</a></li>
             {% else %}
@@ -138,5 +144,3 @@
       </ul>
     </header>
   </div>
-    
-

@@ -13,6 +13,11 @@ controlador=Controlador(Config.cantParkings)
 def raiz():
     return redirect(url_for('rutasglobales.login'))
 
+#@global_rutas.errorhandler(Exception)
+#def http_error_handler(error):
+#    controlador.error()
+#    return render_template('error.html')
+
 @global_rutas.route('/login',methods=['GET','POST'])
 def login():
     if request.method=='POST':
@@ -278,6 +283,9 @@ def altamensual():
         nroParking=controlador.validarParkingIngresado(nroParking)
         if nroParking=='Ocupado':
             flash('El numero de parking ingresado corresponde a uno Ocupado')
+            return redirect(url_for('rutasglobales.altamensual'))
+        elif nroParking=='Inexistente':
+            flash('El numero de parking ingresado no existe')
             return redirect(url_for('rutasglobales.altamensual'))
         nuevoClienteMensual=ClienteMensual(documento=documento,nombre=nombre,celular=celular,activo=True,nroParking=nroParking,idDescuento=1)
         resultado=controlador.altaClienteMensual(nuevoClienteMensual,mesesDeseados)
