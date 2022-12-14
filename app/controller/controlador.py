@@ -1,5 +1,6 @@
 from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta
+
 from app.db.basedatos import bbdd
 from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia
 from os import path
@@ -167,6 +168,13 @@ class Controlador():
             self.base.activar_descuento(idalta)
             return 'Alta'
 
+    def borrarDescuento(self,idborrar):
+        if self.devDescuento(idborrar) is None:
+            return 'Mal'
+        else:
+            self.base.borrar_descuento(idborrar)
+            return 'Borrado'
+
     def calculaNuevoPrecioPorcentajeDiario(self,porcentajeBase,porcentajeMinuto):
         precioBaseActual=self.devPrecioActualDiario().precioBase
         precioMinutoActual=self.devPrecioActualDiario().precioMinuto
@@ -264,8 +272,29 @@ class Controlador():
         else:
             return 'Inactivo'
 
+    def ordenarListaClientesMensualesActivos(self,listaClientesMensualesActivos):
+        listaOrdenada=sorted(listaClientesMensualesActivos, key=lambda lista: datetime.strptime(lista[6],Config.formatoFechaCorta))
+        return listaOrdenada
+
     def listarClientesMensualesActivos(self):
-        return self.base.dev_lista_clientes_mensuales_activos()
+        listado=self.base.dev_lista_clientes_mensuales_activos()
+        print(listado)
+        nuevolistado=[]
+        hoy = datetime.now().date()
+        print(hoy)
+        for l in listado:
+            fechaVencimiento=datetime.strptime(l[6],Config.formatoFechaCorta).date()
+            print(fechaVencimiento)
+            if fechaVencimiento<=hoy:
+                nueval=(l[0],l[1],l[2],l[3],l[4],l[5],l[6],l[7],l[8],'False')
+                nuevolistado.append(nueval)
+            else: 
+                nueval=(l[0],l[1],l[2],l[3],l[4],l[5],l[6],l[7],l[8],'True')
+                nuevolistado.append(nueval)
+        print(nuevolistado)
+        ordenado=self.ordenarListaClientesMensualesActivos(nuevolistado)
+        print(ordenado)
+        return ordenado
 
     def asignarDescuentoMensual(self,documentoIngresado,idDescuentoIngresado:int):
         clienteIngresado=self.devClienteMensual(documentoIngresado)

@@ -165,6 +165,10 @@ class bbdd():
         self.session.query(Descuento).filter_by(idDescuento=idAlta).update({Descuento.vigente:True})
         self.session.commit()
 
+    def borrar_descuento(self,idBorrar):
+        self.session.query(Descuento).filter_by(idDescuento=idBorrar).delete()
+        self.session.commit()
+
     def nuevo_precio_diario(self,precioBase,precioMinuto):
         nuevoPrecio=Precio(idPrecio=None,precioBase=precioBase,precioMinuto=precioMinuto,fechaAlta=datetime.now().strftime(Config.formatoFecha),fechaBaja=None,mensual=False)
         self.session.add(nuevoPrecio)

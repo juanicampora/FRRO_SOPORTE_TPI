@@ -108,7 +108,7 @@
       </a>
       <ul class="nav nav-pills">
         <li class="nav-item dropend">
-          {% if request.path=='/descuentos' or request.path=='/precios' %}
+          {% if request.path=='/descuentos' or request.path=='/precios' or request.path=='/preciosmensual' %}
           <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Actualizaciones
           </a>
@@ -130,7 +130,7 @@
             <li><a class="dropdown-item" href="/precios">Actualizar Precios Diarios</a></li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
-            {% if request.path=='/precios' %}
+            {% if request.path=='/preciosmensual' %}
             <li><a class="dropdown-item active" href="/preciosmensual" ">Actualizar Precios Mensuales</a></li>
             {% else %}
             <li><a class="dropdown-item" href="/preciosmensual">Actualizar Precios Mensuales</a></li>

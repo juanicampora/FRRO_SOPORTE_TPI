@@ -31,7 +31,7 @@
 
                 <tbody>
                     {% for l in data_lista %}
-                        <tr>
+                        {% if l[9]=='True' %}<tr class="table-success">{% else %}<tr class="table-danger">{% endif %}
                             <td>{{l[0]}}</td>                            
                             <td>{{l[1]}}</td>                            
                             <td>{{l[2]}}</td>                            
@@ -41,7 +41,9 @@
                             {% if l[6]==None%}
                             <td> </td>
                             {% else %}
-                            <td>{{l[6]}}</td> 
+                            <td>{{l[6]}}
+                            {% if l[9]=='False' %}<a href="/pagomensual/{{l[2]}}" class="btn btn-success" role="button">Pagar</a>{% endif %}
+                            </td> 
                             {% endif %}
                             <td>{{l[7]}}</td> 
                             {% if l[8] %}

@@ -84,7 +84,12 @@
                                 <td>{{d.idDescuento}}</td>                            
                                 <td>{{d.descripcion}}</td>                            
                                 <td>{{d.valor}}</td>                            
-                                <td><a href="/descuentos/alta/{{d.idDescuento}}" class="btn btn-success" role="button">Alta vigencia</a></td>                           
+                                <td><a href="/descuentos/alta/{{d.idDescuento}}" class="btn btn-success" role="button">Alta vigencia</a>
+                                    {% if d.idDescuento!=1 %}
+                                        &ensp; &ensp; &ensp; &ensp; &ensp; 
+                                        <a href="/descuentos/borrar/{{d.idDescuento}}" class="btn btn-danger" role="button">BORRAR</a>
+                                    {% endif %}
+                                </td>                           
                             </tr>
                         {% else %}
                             <tr class="table-success">
@@ -118,7 +123,12 @@
                                 <td>{{d.idDescuento}}</td>                            
                                 <td>{{d.descripcion}}</td>                            
                                 <td>{{d.valor}}</td>                            
-                                <td><a href="/descuentos/alta/{{d.idDescuento}}" class="btn btn-success" role="button">Alta vigencia</a></td>                           
+                                <td><a href="/descuentos/alta/{{d.idDescuento}}" class="btn btn-success" role="button">Alta vigencia</a>
+                                    {% if d.idDescuento!=2 %}
+                                        &ensp; &ensp; &ensp; &ensp; &ensp; 
+                                        <a href="/descuentos/borrar/{{d.idDescuento}}" class="btn btn-danger" role="button">BORRAR</a>
+                                    {% endif %}
+                                </td>                           
                             </tr>
                         {% else %}
                             <tr class="table-success">

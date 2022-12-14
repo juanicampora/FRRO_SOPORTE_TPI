@@ -1,0 +1,5 @@
+Todas las librerias que hay que instalar con pip:
+
+Flask
+
+

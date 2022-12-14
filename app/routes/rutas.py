@@ -194,6 +194,11 @@ def acciondescuentos(accion,idDescuento):
         else:
             flash('El id de cliente ingresado es inexistente ')
             return redirect(url_for('rutasglobales.descuentos'))
+    elif accion=='borrar':
+        resultado=controlador.borrarDescuento(idDescuento)
+        if resultado=='borrado':
+            flash('Descuento Borrado')
+            return redirect(url_for('rutasglobales.descuentos'))
 
 @global_rutas.route('/precios',methods=['GET','POST'])
 @login_required

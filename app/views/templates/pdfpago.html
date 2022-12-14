@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estacionamiento</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='estacionamiento.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body class="bg-secondary"> 
+<div class="modal modal-signin position-static d-block bg-secondary py-1" tabindex="-1" role="dialog" id="modalSignin">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header px-5 pt-4 pb-0 border-bottom-0">
+            <img class="bi me-4" src="{{ url_for('static',filename='estacionamiento.svg') }}" alt="" width="70" height="70">
+            <br>
+            <h2 class="border-bottom fw-bold mb-0 fs-2 pb-2 w-100 text-center">Factura Pago <br> {{dia}}</h2>
+        </div>
+         
+        <div class="modal-body px-5 pt-1 pb-2">
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='patente.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">Nombre Cliente</strong>
+                    </div>
+                    <span class="d-block">{{datos.nombre}}</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='tiempo.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">Meses Pagados</strong>
+                    </div>
+                    <span class="d-block">{{datos.mesesPagar}} {%if datos.mesesPagar==1%}mes{%else%}meses{%endif%}</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='costo.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">Costo sin Descuento</strong>
+                    </div>
+                    <span class="d-block">${{datos.costo}}</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <img class="bi me-4" src="{{ url_for('static',filename='descuento.svg') }}" alt="" width="32" height="32">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Descuento aplicado</strong>
+                </div>
+                <span class="d-block">{{datos.valorDescuento}}% &nbsp &nbsp ({{datos.descripcionDescuento}})</span>
+                </div>
+            </div>
+            <div class="d-flex text-muted pt-3">
+                <div class="pb-3 mb-0 small lh-sm border-bottom w-100"></div>
+            </div>
+    
+            <div class="d-flex text-muted align-items-center pt-1 pb-1">
+                <img class="bi me-4" src="{{ url_for('static',filename='monto.svg') }}" alt="" width="32" height="32">
+                <strong class="text-dark fs-3">Total Pagado:</strong>
+                <span class="d-block fs-4">&nbsp &nbsp ${{datos.monto}}</span>    
+            </div>  
+            <div class="pb-1 mb-5 small lh-sm border-bottom w-100"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
