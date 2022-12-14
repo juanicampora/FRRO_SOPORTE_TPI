@@ -321,14 +321,17 @@ class Controlador():
         if  cliente==None:
             return 'Inexistente'
         else:
-            abono=self.base.dev_abono_cliente(documentoIngresado)
-            descuento=self.base.dev_descuento(cliente.idDescuento)
-            mesesDeuda=self.calcularMesesDeuda(abono.fechaVencimiento)
-            precio=self.base.dev_precio_actual_mensual()
-            monto=precio.precioBase*mesesDeuda*(1-descuento.valor/100)
-            resumen=ResumenPagoCochera(documento=cliente.documento,nombre=cliente.nombre,fechaVencimiento=abono.fechaVencimiento,fechaDeseada=abono.fechaDeseada,mesesDeuda=mesesDeuda,
-                                        valorDescuento=descuento.valor,descripcionDescuento=descuento.descripcion,precioMes=precio.precioBase,monto=monto)
-            return resumen
+            if cliente.activo:
+                abono=self.base.dev_abono_cliente(documentoIngresado)
+                descuento=self.base.dev_descuento(cliente.idDescuento)
+                mesesDeuda=self.calcularMesesDeuda(abono.fechaVencimiento)
+                precio=self.base.dev_precio_actual_mensual()
+                monto=precio.precioBase*mesesDeuda*(1-descuento.valor/100)
+                resumen=ResumenPagoCochera(documento=cliente.documento,nombre=cliente.nombre,fechaVencimiento=abono.fechaVencimiento,fechaDeseada=abono.fechaDeseada,mesesDeuda=mesesDeuda,
+                                            valorDescuento=descuento.valor,descripcionDescuento=descuento.descripcion,precioMes=precio.precioBase,monto=monto)
+                return resumen
+            else:
+                return 'Inactivo'
     
     def finPagoMensual(self,mesesPagar,mesesOcupar,documentoPrevio):
         datosPrevios=self.resumenPagoMensual(documentoPrevio)

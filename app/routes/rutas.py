@@ -430,6 +430,9 @@ def pagomensual(documento=None,accion=None):
             if resumenPagoMensual=='Inexistente':
                 flash('El documento ingresado no corresponde a un cliente')
                 return redirect(url_for('rutasglobales.pagomensual'))
+            elif resumenPagoMensual=='Inactivo':
+                flash('El cliente no se encuentra activo')
+                return redirect(url_for('rutasglobales.pagomensual'))
             return render_template('pagomensual2.html',datos=resumenPagoMensual) 
         elif accion=='salioDePagoMensual_2':
             mesesPagar= request.form['mesesPagar']
