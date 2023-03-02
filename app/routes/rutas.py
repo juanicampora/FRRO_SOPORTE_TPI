@@ -282,7 +282,7 @@ def asignardescuento(idDescuento=None):
             descuento=controlador.devDescuento(idDescuento)
             return render_template('asignardescuento2.html',data_descuento=descuento)
 
-############################################################################# HASTA ACA EL MODULO DIARIO FUNCIONANDO
+############################################################################# HASTA ACA EL MODULO DIARIO
 
 @global_rutas.route('/altamensual' ,methods=['GET','POST'])
 @login_required
