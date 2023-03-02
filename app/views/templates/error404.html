@@ -1,0 +1,19 @@
+{% include 'header.html' %}
+
+<br>
+<br>   
+<div class="container">
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">¡Atención!</h4>
+                        <p>{% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>messages</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                  </div>   
+                            {% endif %}
+                          {% endwith %}</p>
+                    </div>
+</div>
+
+{% include 'footer.html' %}

@@ -1,6 +1,8 @@
 from flask import Blueprint,render_template, request, redirect,url_for ,session,send_from_directory,flash
 from flask_login import login_user,logout_user,login_required
 
+from werkzeug.exceptions import HTTPException
+
 from app.configuracion import Config
 from app.db.modelos import Precio,Descuento,Cliente,Trabajador,Parking,Estadia,ClienteMensual,Abono
 from app.controller.controlador import Controlador
@@ -13,10 +15,22 @@ controlador=Controlador(Config.cantParkings)
 def raiz():
     return redirect(url_for('rutasglobales.login'))
 
-#@global_rutas.errorhandler(Exception)
-#def http_error_handler(error):
-#    controlador.error()
-#    return render_template('error.html')
+@global_rutas.errorhandler(404)
+def invalid_route(e): 
+    flash('PAGINA NO ENCONTRADA')
+    print('ENTRO EN EL ERROR 404')
+    return render_template('error404.html'),404
+
+@global_rutas.errorhandler(401)
+def funcion_error_401(error):
+    flash('Para ingresar a esta página debe iniciar sesión')
+    print('ENTRO EN EL ERROR 401')
+    return redirect(url_for('rutasglobales.login'))
+
+@global_rutas.errorhandler(Exception)
+def http_error_handler(error):
+    controlador.error()
+    return render_template('error.html')
 
 @global_rutas.route('/login',methods=['GET','POST'])
 def login():
